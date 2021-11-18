@@ -1,0 +1,21 @@
+token-matcher:
+  sync-time: 120s
+  endpoint: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
+
+spring:
+  main:
+    web-application-type: none
+
+    jpa:
+      open-in-view: false
+
+      hibernate:
+        ddl-auto: validate
+
+      properties:
+        hibernate:
+          schema_update:
+            unique_constraint_strategy: RECREATE_QUIETLY
+          jdbc:
+            lob:
+              non_contextual_creation: true
