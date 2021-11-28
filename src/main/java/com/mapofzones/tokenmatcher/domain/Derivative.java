@@ -1,52 +1,53 @@
 package com.mapofzones.tokenmatcher.domain;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
-
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import java.io.Serializable;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode
+@Data
 @Table(name = "DERIVATIVES")
 public class Derivative {
-	
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
 	@Embeddable
-	@ToString
-	@Getter
-	public static class DerivativeId implements Serializable{
+	public static class DerivativeId implements Serializable {
+
 		@Column(name = "ZONE")
-		String zone;
-		@Column(name = "DENOM")
-		String denom;
+		private String zone;
+
+		@Column(name = "FULL_DENOM")
+		private String fullDenom;
 	}
-	
-	@Id
-	private DerivativeId derivativeId; 
-	@Column(name = "PATH")
-	private String path;
+
+	@EmbeddedId
+	private DerivativeId derivativeId;
+
 	@Column(name = "BASE_DENOM")
 	private String baseDenom;
+
 	@Column(name = "ORIGIN_ZONE")
 	private String originZone;
-	
-	
+
+	@Transient
+	private boolean isSuccessDenomTraceReceived = true;
+
 	public void merge(DenomTraceDto dto) {
-		this.path = dto.getPath();
+		derivativeId.fullDenom = dto.getFullDenom() + "/" + dto.getBaseDenom();
 		this.baseDenom = dto.getBaseDenom();
+		this.isSuccessDenomTraceReceived = dto.isSuccessReceived();
 	}
-	
 }

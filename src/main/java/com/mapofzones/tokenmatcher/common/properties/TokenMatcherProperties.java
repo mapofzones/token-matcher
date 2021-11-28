@@ -14,5 +14,7 @@ public class TokenMatcherProperties {
 
 	private Duration syncTime;
 	private String endpoint;
+	private Integer threads;
+	private Integer batchSize;
 	
 }

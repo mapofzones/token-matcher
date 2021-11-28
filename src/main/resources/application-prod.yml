@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASS}
+    url: ${TOKEN_MATCHER_DB_URL}
+    username: ${TOKEN_MATCHER_DB_USER}
+    password: ${TOKEN_MATCHER_DB_PASS}

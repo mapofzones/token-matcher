@@ -1,12 +1,16 @@
 package com.mapofzones.tokenmatcher.service.derivative;
 
-import java.util.Set;
-
+import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 
+import java.util.List;
+
 public interface IDerivativeService {
-	
-	public Set<Derivative> findUnmatchedDerivatives();
-	public Derivative match(Derivative.DerivativeId id);
+
+	Derivative findById(Derivative.DerivativeId id);
+	Derivative save(Derivative derivative);
+	void saveBatch(List<Derivative> derivativeList);
+	Boolean isExists(Derivative.DerivativeId derivativeId);
+	Derivative buildViaCashFlow(Cashflow cashflow);
 
 }

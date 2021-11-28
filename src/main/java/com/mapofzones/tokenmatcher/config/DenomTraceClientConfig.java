@@ -18,10 +18,9 @@ public class DenomTraceClientConfig {
 
 	@Bean
 	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
-		RestTemplate restTemplate = restTemplateBuilder
+		return restTemplateBuilder
 				.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
 				.build();
-		return restTemplate;
 	}
 	
 	@Bean 

@@ -1,5 +1,7 @@
 package com.mapofzones.tokenmatcher.config;
 
+import com.mapofzones.tokenmatcher.service.cashflow.ICashflowService;
+import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,8 +33,8 @@ public class TokenMatcherConfig {
 		@Scheduled(fixedDelayString = "#{tokenMatcherProperties.syncTime}")
 		public void run() {
 			log.info("TokenMatcher is running.");
-			tokenMatcherFacade.match();
-			log.info("TokenMatcher is running.");
+			tokenMatcherFacade.matchAll();
+			log.info("TokenMatcher is finished.");
 		}
 	}
 }
