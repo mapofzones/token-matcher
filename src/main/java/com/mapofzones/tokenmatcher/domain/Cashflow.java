@@ -1,36 +1,59 @@
 package com.mapofzones.tokenmatcher.domain;
 
-import java.io.Serializable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
 @Table(name = "IBC_TRANSFER_HOURLY_CASHFLOW")
 public class Cashflow {
 
 	@Embeddable
+	@ToString
+	@Getter
+	@Setter
 	public static class CashflowId implements Serializable{
 		@Column(name = "ZONE")
-		String zone;
+		private String zone;
+
+		@Column(name = "ZONE_SRC")
+		private String zoneSource;
+
+		@Column(name = "ZONE_DEST")
+		private String zoneDestination;
+
+		@Column(name = "HOUR")
+		private LocalDateTime hour;
+
+		@Column(name = "PERIOD")
+		private Integer period;
+
+		@Column(name = "IBC_CHANNEL")
+		private String ibcChannel;
+
 		@Column(name = "DENOM")
-		String denom;
+		private String denom;
 	}
 	
 	@EmbeddedId
-	private CashflowId keyId;
-	
-	
+	private CashflowId cashflowId;
+
+	@Column(name = "derivative_denom")
+	private String derivativeDenom;
 }

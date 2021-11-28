@@ -1,5 +1,6 @@
 package com.mapofzones.tokenmatcher.service.zonenode;
 
+import com.mapofzones.tokenmatcher.common.exceptions.ExceptionMessages;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,6 @@ public class ZoneNodeService implements IZoneNodeService {
 	@Override
 	public ZoneNode getAliveByName(String zoneName) {
 		return zoneNodeRepository.findFirstByZoneAndIsAliveIsTrue(zoneName)
-				.orElseThrow(() -> new EntityNotFoundException("Not found ZoneNode", zoneName));
+				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.ERROR_ENTITY_NOT_FOUND, zoneName));
 	}
 }

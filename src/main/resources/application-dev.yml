@@ -2,4 +2,6 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/moz_db
     username: postgres
-    password: postgres-pass
+    password: postgres
+    hikari:
+      maximum-pool-size: 1
