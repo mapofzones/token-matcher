@@ -1,13 +1,13 @@
 token-matcher:
-  sync-time: 1s
-  threads: 1
+  sync-time: 5s
+  threads: 100
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
   batch-size: 1000
   endpoint: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
 
 pathfinder:
-  sync-time: 1s
-  threads: 1
+  sync-time: 5s
+  threads: 100
   threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 spring:

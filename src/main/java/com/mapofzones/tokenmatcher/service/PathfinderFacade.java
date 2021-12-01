@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.service;
 
-import com.mapofzones.tokenmatcher.common.properties.PathfinderProperties;
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.domain.Token;
@@ -24,30 +23,29 @@ import java.util.regex.Pattern;
 @Service
 public class PathfinderFacade {
 
-    private final PathfinderProperties properties;
     private final ITokenService tokenService;
     private final IZoneService zoneService;
     private final IDerivativeService derivativeService;
-    private final IThreadStarter threadStarter;
+    private final IThreadStarter pathfinderThreadStarter;
 
     private BlockingQueue<Derivative> derivativeQueue;
 
-    public PathfinderFacade(PathfinderProperties properties,
-                            ITokenService tokenService,
+    public PathfinderFacade(ITokenService tokenService,
                             IZoneService zoneService,
                             IDerivativeService derivativeService,
-                            IThreadStarter threadStarter) {
-        this.properties = properties;
+                            IThreadStarter pathfinderThreadStarter) {
         this.tokenService = tokenService;
         this.zoneService = zoneService;
         this.derivativeService = derivativeService;
-        this.threadStarter = threadStarter;
+        this.pathfinderThreadStarter = pathfinderThreadStarter;
     }
 
     public void findAll() {
         List<Derivative> incompleteDerivativeList = derivativeService.findIncomplete();
-        derivativeQueue = new ArrayBlockingQueue<>(incompleteDerivativeList.size(), true, incompleteDerivativeList);
-        threadStarter.startThreads(pathfinderFunction, properties.getThreads(), properties.getThreadsNaming());
+        if (!incompleteDerivativeList.isEmpty()) {
+            derivativeQueue = new ArrayBlockingQueue<>(incompleteDerivativeList.size(), true, incompleteDerivativeList);
+            pathfinderThreadStarter.startThreads(pathfinderFunction);
+        }
     }
 
     @Transactional
@@ -96,8 +94,8 @@ public class PathfinderFacade {
 
             if (foundZone != null)
                 return findOriginZone(foundZone.getChainId(), channelIterator);
-//            else if (!channelIterator.hasNext())
-//                return zone;
+            else if (!channelIterator.hasNext())
+                return zone;
             else
                 return "";
 
