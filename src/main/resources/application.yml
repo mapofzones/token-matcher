@@ -1,9 +1,3 @@
-token-matcher:
-  sync-time: 120s
-  endpoint: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
-  threads: 8
-  batch-size: 100
-
 spring:
   main:
     web-application-type: none

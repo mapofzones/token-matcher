@@ -3,6 +3,7 @@ package com.mapofzones.tokenmatcher.service.derivative;
 import com.mapofzones.tokenmatcher.common.exceptions.EntityNotFoundException;
 import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
+import com.mapofzones.tokenmatcher.domain.Token;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(propagation = Propagation.NESTED)
+@Transactional
 @Slf4j
 public class DerivativeService implements IDerivativeService {
 	
@@ -31,26 +32,15 @@ public class DerivativeService implements IDerivativeService {
 	}
 
 	@Override
-	public Derivative findById(Derivative.DerivativeId id) {
-		return derivativeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
-	}
-
-	@Override
 	public Derivative save(Derivative derivative) {
 		return derivativeRepository.save(derivative);
 	}
 
 	@Override
-	public void saveBatch(List<Derivative> derivativeList) {
-		derivativeRepository.saveAll(derivativeList);
+	public List<Derivative> findIncomplete() {
+		return derivativeRepository.findAllByBaseDenomIsNullAndOriginZoneIsNull();
 	}
 
-	@Override
-	public Boolean isExists(Derivative.DerivativeId derivativeId) {
-		return derivativeRepository.existsByDerivativeId(derivativeId);
-	}
-
-	// TODO: Need refactoring
 	@Override
 	public Derivative buildViaCashFlow(Cashflow cashflow) {
 		Derivative derivative = new Derivative();
@@ -61,10 +51,9 @@ public class DerivativeService implements IDerivativeService {
 		if (denomIsHash(cashflow.getCashflowId().getDenom())) {
 			String address = zoneNodeService.getAliveByName(cashflow.getCashflowId().getZone()).getRpcAddress();
 			DenomTraceDto foundDto = denomTraceClient.findDenomTrace(address, cashflow.getCashflowId().getDenom().replace("ibc/", ""));
-			derivative.merge(foundDto);
+			derivative.setDenomTraceData(foundDto);
 		} else  {
 			derivative.getDerivativeId().setFullDenom(cashflowDenom);
-			derivative.setBaseDenom(cashflowDenom.substring(cashflowDenom.lastIndexOf("/") + 1));
 		}
 
 		if (isReceived(cashflow.getCashflowId().getZone(), cashflow.getCashflowId().getZoneDestination())) {
@@ -82,13 +71,15 @@ public class DerivativeService implements IDerivativeService {
 		return derivative;
 	}
 
-	private boolean denomIsHash(String denom) {
-		return denom.contains("ibc/");
+	@Override
+	public void setTokenIdData(Derivative.DerivativeId derivativeId, Token.TokenId tokenId) {
+		Derivative derivative = derivativeRepository.findById(derivativeId)
+				.orElseThrow(() -> new EntityNotFoundException(derivativeId.toString()));
+		derivative.setTokenIdData(tokenId);
 	}
 
-	@Deprecated
-	private boolean denomIsTransfer(String denom) {
-		return denom.contains("transfer/");
+	private boolean denomIsHash(String denom) {
+		return denom.startsWith("ibc/");
 	}
 
 	private boolean isReceived(String zone, String zoneDestination) {

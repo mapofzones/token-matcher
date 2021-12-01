@@ -24,10 +24,8 @@ import java.time.LocalDateTime;
 @Table(name = "IBC_TRANSFER_HOURLY_CASHFLOW")
 public class Cashflow {
 
+	@Data
 	@Embeddable
-	@ToString
-	@Getter
-	@Setter
 	public static class CashflowId implements Serializable{
 		@Column(name = "ZONE")
 		private String zone;

@@ -10,11 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "token-matcher")
-public class TokenMatcherProperties {
+public class TokenMatcherProperties extends BaseProperties {
 
-	private Duration syncTime;
 	private String endpoint;
-	private Integer threads;
 	private Integer batchSize;
-	
+
 }
