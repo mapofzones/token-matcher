@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.service;
 
-import com.mapofzones.tokenmatcher.common.properties.TokenMatcherProperties;
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
@@ -18,27 +17,26 @@ import java.util.concurrent.BlockingQueue;
 @Service
 public class TokenMatcherFacade {
 
-	private final TokenMatcherProperties properties;
 	private final IDerivativeService derivativeService;
 	private final ICashflowService cashflowService;
-	private final IThreadStarter threadStarter;
+	private final IThreadStarter tokenMatcherThreadStarter;
 
 	private BlockingQueue<Cashflow> cashflowQueue;
 
 	public TokenMatcherFacade(IDerivativeService derivativeService,
 							  ICashflowService cashflowService,
-							  TokenMatcherProperties properties,
-							  IThreadStarter threadStarter) {
-		this.properties = properties;
+							  IThreadStarter tokenMatcherThreadStarter) {
 		this.derivativeService = derivativeService;
 		this.cashflowService = cashflowService;
-		this.threadStarter = threadStarter;
+		this.tokenMatcherThreadStarter = tokenMatcherThreadStarter;
 	}
 
 	public void matchAll() {
 		List<Cashflow> unmatchedCashflowList = cashflowService.findUnmatchedCashflow();
-		cashflowQueue = new ArrayBlockingQueue<>(unmatchedCashflowList.size(), true, unmatchedCashflowList);
-		threadStarter.startThreads(tokenMatcherFunction, properties.getThreads(), properties.getThreadsNaming());
+		if (!unmatchedCashflowList.isEmpty()) {
+			cashflowQueue = new ArrayBlockingQueue<>(unmatchedCashflowList.size(), true, unmatchedCashflowList);
+			tokenMatcherThreadStarter.startThreads(tokenMatcherFunction);
+		}
 	}
 
 	@Transactional
