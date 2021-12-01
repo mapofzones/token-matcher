@@ -12,18 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mapofzones.tokenmatcher.domain.Cashflow;
 
 @Service
-@Transactional(propagation = Propagation.NESTED)
+@Transactional
 public class CashflowService implements ICashflowService {
 	
 	private final CashflowRepository cashflowRepository;
 
 	public CashflowService(CashflowRepository cashflowRepository) {
 		this.cashflowRepository = cashflowRepository;
-	}
-
-	@Override
-	public void saveBatch(List<Cashflow> cashflowList) {
-		cashflowRepository.saveAll(cashflowList);
 	}
 
 	@Override

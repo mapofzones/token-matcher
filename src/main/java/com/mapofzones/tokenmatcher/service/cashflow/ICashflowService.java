@@ -8,7 +8,6 @@ import com.mapofzones.tokenmatcher.domain.Derivative;
 
 public interface ICashflowService {
 
-	void saveBatch(List<Cashflow> cashflowList);
 	Cashflow findById(Cashflow.CashflowId id);
 	List<Cashflow> findUnmatchedCashflow();
 	Cashflow matchWithDerivative(Cashflow.CashflowId cashflowId, Derivative.DerivativeId derivativeId);

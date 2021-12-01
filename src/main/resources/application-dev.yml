@@ -1,7 +1,19 @@
+token-matcher:
+  sync-time: 1s
+  threads: 1
+  threads-naming: 'Pool-TokenMatcher-Thread-%d'
+  batch-size: 1000
+  endpoint: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
+
+pathfinder:
+  sync-time: 1s
+  threads: 1
+  threads-naming: 'Pool-Pathfinder-Thread-%d'
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/moz_db
     username: postgres
     password: postgres
     hikari:
-      maximum-pool-size: 1
+      maximum-pool-size: 40

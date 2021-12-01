@@ -45,9 +45,13 @@ public class Derivative {
 	@Transient
 	private boolean isSuccessDenomTraceReceived = true;
 
-	public void merge(DenomTraceDto dto) {
+	public void setDenomTraceData(DenomTraceDto dto) {
 		derivativeId.fullDenom = dto.getFullDenom() + "/" + dto.getBaseDenom();
-		this.baseDenom = dto.getBaseDenom();
 		this.isSuccessDenomTraceReceived = dto.isSuccessReceived();
+	}
+
+	public void setTokenIdData(Token.TokenId tokenId) {
+		this.setBaseDenom(tokenId.getBaseDenom());
+		this.setOriginZone(tokenId.getZone());
 	}
 }
