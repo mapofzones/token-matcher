@@ -1,6 +1,7 @@
 package com.mapofzones.tokenmatcher.config;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,8 @@ public class DenomTraceClientConfig {
 	public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
 		return restTemplateBuilder
 				.additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
+				.setConnectTimeout(Duration.ofSeconds(5))
+				.setReadTimeout(Duration.ofSeconds(5))
 				.build();
 	}
 	
