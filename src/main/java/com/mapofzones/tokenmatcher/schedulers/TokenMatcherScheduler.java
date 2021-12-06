@@ -8,22 +8,22 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class TokenMatcherSchedulers {
+public class TokenMatcherScheduler {
 
     private final TokenMatcherFacade tokenMatcherFacade;
     private final IThreadStarter tokenMatcherThreadStarter;
 
-    public TokenMatcherSchedulers(TokenMatcherFacade tokenMatcherFacade,
-                                  IThreadStarter tokenMatcherThreadStarter) {
+    public TokenMatcherScheduler(TokenMatcherFacade tokenMatcherFacade,
+                                 IThreadStarter tokenMatcherThreadStarter) {
         this.tokenMatcherFacade = tokenMatcherFacade;
         this.tokenMatcherThreadStarter = tokenMatcherThreadStarter;
     }
 
     @Scheduled(fixedDelayString = "#{tokenMatcherProperties.syncTime}")
     public void run() {
-        if (tokenMatcherThreadStarter.isDone()) {
-            log.info("TokenMatcher is running.");
-            tokenMatcherFacade.matchAll();
-        }
+//        if (tokenMatcherThreadStarter.isDone()) {
+//            log.info("TokenMatcher is running.");
+//            tokenMatcherFacade.matchAll();
+//        }
     }
 }

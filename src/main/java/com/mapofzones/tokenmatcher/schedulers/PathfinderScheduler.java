@@ -8,22 +8,22 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PathfinderSchedulers {
+public class PathfinderScheduler {
 
     private final PathfinderFacade pathfinderFacade;
     private final IThreadStarter pathfinderThreadStarter;
 
-    public PathfinderSchedulers(PathfinderFacade pathfinderFacade,
-                                IThreadStarter pathfinderThreadStarter) {
+    public PathfinderScheduler(PathfinderFacade pathfinderFacade,
+                               IThreadStarter pathfinderThreadStarter) {
         this.pathfinderFacade = pathfinderFacade;
         this.pathfinderThreadStarter = pathfinderThreadStarter;
     }
 
     @Scheduled(fixedDelayString = "#{pathfinderProperties.syncTime}")
     public void run() {
-        if (pathfinderThreadStarter.isDone()) {
-            log.info("Pathfinder is running.");
-            pathfinderFacade.findAll();
-        }
+//        if (pathfinderThreadStarter.isDone()) {
+//            log.info("Pathfinder is running.");
+//            pathfinderFacade.findAll();
+//        }
     }
 }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class TokenService implements ITokenService {
@@ -18,5 +20,10 @@ public class TokenService implements ITokenService {
     @Override
     public Token save(Token token) {
         return tokenRepository.save(token);
+    }
+
+    @Override
+    public List<Token> FindAllByCoingeckoIsNotNull() {
+        return tokenRepository.findAllByCoingeckoIdIsNotNull();
     }
 }

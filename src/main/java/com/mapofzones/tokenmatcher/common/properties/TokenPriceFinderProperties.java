@@ -6,9 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "token-matcher")
-public class TokenMatcherProperties extends BaseProperties {
+@ConfigurationProperties(prefix = "token-price-finder")
+public class TokenPriceFinderProperties extends BaseProperties {
 
-	private Integer batchSize;
 
 }
