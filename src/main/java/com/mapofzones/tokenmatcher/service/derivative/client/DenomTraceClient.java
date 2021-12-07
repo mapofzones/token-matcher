@@ -30,7 +30,7 @@ public class DenomTraceClient {
 	// TODO: Need to refactoring when findRest wos implemented
 	public DenomTraceDto findDenomTrace(String address, String hash) {
 
-		URI uri = UriHelper.modifyUri(URI.create(address + String.format(endpointProperties.getIbc().denomTrace, hash)));
+		URI uri = UriHelper.modifyUri(URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash)));
 		log.info(String.valueOf((uri)));
 		if (!uri.toString().isEmpty()) {
 

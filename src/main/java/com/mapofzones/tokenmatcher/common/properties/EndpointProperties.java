@@ -15,13 +15,13 @@ public class EndpointProperties {
     @Getter
     @Setter
     public static class IBC {
-        public String denomTrace;
+        private String denomTrace;
     }
 
     @Getter
     @Setter
     public static class Coingecko {
-        public String baseUrl;
-        public String tokenPriceHistory;
+        private String baseUrl;
+        private String tokenPriceHistory;
     }
 }

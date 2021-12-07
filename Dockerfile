@@ -12,4 +12,4 @@ FROM openjdk:11-jdk-slim
 
 COPY --from=build /opt/target/token-*.jar /opt/app.jar
 
-CMD java -jar /opt/app.jar --spring.profiles.active=dev
+CMD java -jar /opt/app.jar --spring.profiles.active=prod

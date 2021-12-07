@@ -18,9 +18,6 @@ import java.util.List;
 @Service
 public class TokenPriceService implements ITokenPriceService {
 
-    // 2021-01-01
-    private final static Long START_DATE_IN_MILLIS = 1609448400000L;
-
     private final CoingeckoClient coingeckoClient;
     private final TokenPriceRepository tokenPriceRepository;
 
@@ -32,7 +29,7 @@ public class TokenPriceService implements ITokenPriceService {
 
     @Override
     public void findAndSaveTokenPriceByToken(Token token) {
-        List<TokenPriceInSpecificHourDto> dtoList = coingeckoClient.findTokenPrice(token.getCoingeckoId(), calculateDaysBetweenStartDateAndNow());
+        List<TokenPriceInSpecificHourDto> dtoList = coingeckoClient.findTokenPrice(token.getCoingeckoId());
 
         List<TokenPrice> preparedTokenPriceList = new ArrayList<>();
 
@@ -46,12 +43,6 @@ public class TokenPriceService implements ITokenPriceService {
         }
 
         tokenPriceRepository.saveAll(preparedTokenPriceList);
-    }
-
-    private long calculateDaysBetweenStartDateAndNow() {
-        LocalDateTime startDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(START_DATE_IN_MILLIS), ZoneId.systemDefault()).truncatedTo(ChronoUnit.HOURS);
-        LocalDateTime now = LocalDateTime.now();
-        return ChronoUnit.DAYS.between(startDate, now);
     }
 
     private LocalDateTime millisToLocalDateTime(long time) {

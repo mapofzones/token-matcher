@@ -1,16 +1,16 @@
 token-matcher:
-  sync-time: 60s
+  sync-time: 120s
   threads: 8
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
   batch-size: 1000
 
 pathfinder:
-  sync-time: 20s
+  sync-time: 120s
   threads: 1
   threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
-  sync-time: 20s
+  sync-time: 2000s
   threads: 1
   threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 
@@ -19,7 +19,7 @@ endpoint:
     denom-trace: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
   coingecko:
     base-url: 'https://api.coingecko.com/api/v3'
-    token-price-history: '/coins/%s/market_chart?vs_currency=usd&days=%s&interval=hourly'
+    token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'
 
 spring:
   main:
