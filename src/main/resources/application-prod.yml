@@ -1,6 +1,6 @@
 token-matcher:
   sync-time: 120s
-  threads: 4
+  threads: 2
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
   batch-size: 100
 
@@ -10,14 +10,14 @@ pathfinder:
   threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
-  sync-time: 2000s
+  sync-time: 120s
   threads: 1
   threads-naming: 'Pool-TokenFinder-Thread-%d'
 
 spring:
   datasource:
-    url: ${TOKEN_MATCHER_DB_URL}
-    username: ${TOKEN_MATCHER_DB_USER}
-    password: ${TOKEN_MATCHER_DB_PASS}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
     hikari:
       maximum-pool-size: 4

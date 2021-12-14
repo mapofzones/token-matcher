@@ -4,5 +4,5 @@ import com.mapofzones.tokenmatcher.domain.ZoneNode;
 
 public interface IZoneNodeService {
 
-	public ZoneNode getAliveByName(String zoneName);
+	ZoneNode getAliveByName(String zoneName);
 }

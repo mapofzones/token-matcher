@@ -5,15 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "ZONE_NODES")
 public class ZoneNode {
@@ -27,5 +29,11 @@ public class ZoneNode {
 	
 	@Column(name = "IS_ALIVE")
 	private Boolean isAlive;
+
+	@Column(name = "LCD_ADDR")
+	private String lcdAddress;
+
+	@Column(name = "IS_LCD_ADDR_ACTIVE")
+	private Boolean isLcdAddressActive;
 	
 }

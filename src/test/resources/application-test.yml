@@ -1,0 +1,11 @@
+endpoint:
+  ibc:
+    denom-trace: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
+  coingecko:
+    base-url: 'https://api.coingecko.com/api/v3'
+    token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'
+
+spring:
+  main:
+    web-application-type: none
+

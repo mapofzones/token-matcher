@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mapofzones.tokenmatcher.common.exceptions.EntityNotFoundException;
 import com.mapofzones.tokenmatcher.domain.ZoneNode;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 public class ZoneNodeService implements IZoneNodeService {
@@ -19,7 +21,7 @@ public class ZoneNodeService implements IZoneNodeService {
 
 	@Override
 	public ZoneNode getAliveByName(String zoneName) {
-		return zoneNodeRepository.findFirstByZoneAndIsAliveIsTrue(zoneName)
-				.orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.ERROR_ENTITY_NOT_FOUND, zoneName));
+
+		return zoneNodeRepository.findFirstByZoneAndIsLcdAddressActiveIsTrue(zoneName).orElse(new ZoneNode());
 	}
 }

@@ -10,6 +10,6 @@ import com.mapofzones.tokenmatcher.domain.ZoneNode;
 @Repository
 public interface ZoneNodeRepository extends JpaRepository<ZoneNode, String> {
 
-	Optional<ZoneNode> findFirstByZoneAndIsAliveIsTrue(String zone);
+	Optional<ZoneNode> findFirstByZoneAndIsLcdAddressActiveIsTrue(String zone);
 	
 }

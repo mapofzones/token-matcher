@@ -30,9 +30,9 @@ public class DenomTraceClient {
 	// TODO: Need to refactoring when findRest wos implemented
 	public DenomTraceDto findDenomTrace(String address, String hash) {
 
-		URI uri = UriHelper.modifyUri(URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash)));
-		log.info(String.valueOf((uri)));
-		if (!uri.toString().isEmpty()) {
+		if (!address.isEmpty()) {
+			URI uri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash));
+			log.info(String.valueOf((uri)));
 
 			try {
 				ResponseEntity<String> response = denomTraceRestTemplate.getForEntity(uri, String.class);

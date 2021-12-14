@@ -1,6 +1,6 @@
 token-matcher:
   sync-time: 120s
-  threads: 32
+  threads: 16
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
   batch-size: 1000
 

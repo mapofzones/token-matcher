@@ -5,7 +5,6 @@ import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceInSpecificHourDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
@@ -79,7 +78,7 @@ public class CoingeckoClient {
             }
 
             return tokenPriceList;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             log.warn("Cant parse json.");
             throw new JsonParceException("Cant parse json", e.getCause());
         }

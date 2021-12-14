@@ -4,6 +4,7 @@ import com.mapofzones.tokenmatcher.common.exceptions.EntityNotFoundException;
 import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.domain.Token;
+import com.mapofzones.tokenmatcher.domain.ZoneNode;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
@@ -49,8 +50,9 @@ public class DerivativeService implements IDerivativeService {
 		String cashflowDenom = cashflow.getCashflowId().getDenom();
 
 		if (denomIsHash(cashflow.getCashflowId().getDenom())) {
-			String address = zoneNodeService.getAliveByName(cashflow.getCashflowId().getZone()).getRpcAddress();
-			DenomTraceDto foundDto = denomTraceClient.findDenomTrace(address, cashflow.getCashflowId().getDenom().replace("ibc/", ""));
+			String address = findAddressByZone(cashflow.getCashflowId().getZone());
+			DenomTraceDto foundDto = denomTraceClient
+					.findDenomTrace(address, cashflow.getCashflowId().getDenom().replace("ibc/", ""));
 			derivative.setDenomTraceData(foundDto);
 		} else  {
 			derivative.getDerivativeId().setFullDenom(cashflowDenom);
@@ -84,5 +86,10 @@ public class DerivativeService implements IDerivativeService {
 
 	private boolean isReceived(String zone, String zoneDestination) {
 		return zone.equals(zoneDestination);
+	}
+
+	private String findAddressByZone(String zone) {
+		ZoneNode zoneNode = zoneNodeService.getAliveByName(zone);
+		return zoneNode.getLcdAddress() != null ? zoneNode.getLcdAddress() : "";
 	}
 }
