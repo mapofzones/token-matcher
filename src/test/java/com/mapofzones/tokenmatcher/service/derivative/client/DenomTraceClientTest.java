@@ -5,6 +5,7 @@ import com.mapofzones.tokenmatcher.AbstractTest;
 import com.mapofzones.tokenmatcher.config.DenomTraceClientConfig;
 import com.mapofzones.tokenmatcher.config.PropertiesConfig;
 import com.mapofzones.tokenmatcher.config.TestConfig;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
@@ -24,6 +25,7 @@ public class DenomTraceClientTest extends AbstractTest {
     @Autowired
     private DenomTraceClient denomTraceClient;
 
+    @Disabled
     @Test
     public void findDenomTrace_IsSuccessfulReceived_Test() {
         DenomTraceDto receivedDto1 = denomTraceClient.findDenomTrace(COSMOSHUB_LCD, "14F9BC3E44B8A9C1BE1FB08980FAB87034C9905EF17CF2F5008FC085218811CC");

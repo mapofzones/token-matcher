@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapofzones.tokenmatcher.common.exceptions.JsonParceException;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
-import com.mapofzones.tokenmatcher.utils.UriHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;

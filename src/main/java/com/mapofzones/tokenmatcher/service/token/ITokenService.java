@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ITokenService {
 
-    Token save(Token token);
+    void save(Token token);
     List<Token> FindAllByCoingeckoIsNotNull();
 
 }

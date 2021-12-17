@@ -1,6 +1,6 @@
 token-matcher:
   sync-time: 120s
-  threads: 16
+  threads: 2
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
   batch-size: 1000
 
@@ -20,4 +20,4 @@ spring:
     username: postgres
     password: postgres
     hikari:
-      maximum-pool-size: 40
+      maximum-pool-size: 4

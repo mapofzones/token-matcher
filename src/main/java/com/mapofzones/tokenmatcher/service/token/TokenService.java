@@ -18,8 +18,8 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public Token save(Token token) {
-        return tokenRepository.save(token);
+    public void save(Token token) {
+        tokenRepository.save(token.getTokenId().getZone(), token.getTokenId().getBaseDenom());
     }
 
     @Override
