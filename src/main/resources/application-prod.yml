@@ -1,17 +1,17 @@
 token-matcher:
-  sync-time: 120s
-  threads: 2
+  sync-time: ${TM_SYNC_TIME}
+  threads: ${TM_THREADS}
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
-  batch-size: 100
+  batch-size: 100 # Deprecated
 
 pathfinder:
-  sync-time: 120s
-  threads: 1
+  sync-time: ${PF_SYNC_TIME}
+  threads: ${PF_THREADS}
   threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
-  sync-time: 120s
-  threads: 1
+  sync-time: ${TPF_SYNC_TIME}
+  threads: ${TPF_THREADS}
   threads-naming: 'Pool-TokenFinder-Thread-%d'
 
 spring:
