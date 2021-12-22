@@ -43,7 +43,7 @@ public class TokenMatcherFacade {
 	public void match(Cashflow cashflow) {
 		Derivative builtDerivative = derivativeService.buildViaCashFlow(cashflow);
 
-		if (builtDerivative.isSuccessDenomTraceReceived()) {
+		if (builtDerivative.isSuccessfulBuild()) {
 			Derivative savedDerivative = derivativeService.save(builtDerivative);
 			log.info("Saved: " + savedDerivative.toString());
 			Cashflow matchedCashflow = cashflowService.matchWithDerivative(cashflow.getCashflowId(), savedDerivative.getDerivativeId());

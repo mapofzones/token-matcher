@@ -3,9 +3,7 @@ package com.mapofzones.tokenmatcher.domain;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -43,11 +41,11 @@ public class Derivative {
 	private String originZone;
 
 	@Transient
-	private boolean isSuccessDenomTraceReceived = true;
+	private boolean isSuccessfulBuild = true;
 
 	public void setDenomTraceData(DenomTraceDto dto) {
 		derivativeId.fullDenom = dto.getFullDenom() + "/" + dto.getBaseDenom();
-		this.isSuccessDenomTraceReceived = dto.isSuccessReceived();
+		this.isSuccessfulBuild = dto.isSuccessReceived();
 	}
 
 	public void setTokenIdData(Token.TokenId tokenId) {

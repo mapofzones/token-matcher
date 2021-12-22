@@ -2,9 +2,12 @@ package com.mapofzones.tokenmatcher.service.derivative;
 
 import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
+import com.mapofzones.tokenmatcher.domain.IbcChannel;
 import com.mapofzones.tokenmatcher.domain.ZoneNode;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
 import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
+import com.mapofzones.tokenmatcher.service.ibcchannel.IIbcChanelService;
+import com.mapofzones.tokenmatcher.service.ibcchannel.IbcChanelService;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
 import com.mapofzones.tokenmatcher.service.zonenode.ZoneNodeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +18,7 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +28,8 @@ public class DerivativeTest {
     private DenomTraceClient denomTraceClient;
     @Mock
     private IZoneNodeService zoneNodeService;
+    @Mock
+    private IIbcChanelService ibcChanelService;
 
     private IDerivativeService derivativeService;
 
@@ -31,7 +37,8 @@ public class DerivativeTest {
     public void setUp() {
         denomTraceClient = Mockito.mock(DenomTraceClient.class);
         zoneNodeService = Mockito.mock(ZoneNodeService.class);
-        derivativeService = new DerivativeService(null, denomTraceClient, zoneNodeService);
+        ibcChanelService = Mockito.mock(IbcChanelService.class);
+        derivativeService = new DerivativeService(null, denomTraceClient, zoneNodeService, ibcChanelService);
     }
 
     @Test
@@ -59,12 +66,35 @@ public class DerivativeTest {
     }
 
     @Test
-    public void buildViaCashFlow_withIsReceivedOperation_Test() {
+    public void buildViaCashFlow_withIsReceivedOperationEscrow_Test() {
+        when(ibcChanelService.findById(any())).thenReturn(getIbcChannel_1());
+
         Derivative.DerivativeId derivativeId = new Derivative.DerivativeId("columbus-5", "transfer/channel-1/transfer/channel-72/uluna");
         Derivative actualDerivative = new Derivative();
         actualDerivative.setDerivativeId(derivativeId);
 
-        assertEquals(derivativeService.buildViaCashFlow(getCashflowWithReceivedOperaton()), actualDerivative);
+        assertEquals(derivativeService.buildViaCashFlow(getCashflowWithReceivedOperation()), actualDerivative);
+    }
+
+    @Test
+    public void buildViaCashFlow_withIsReceivedOperationUnescrow_Test() {
+        when(ibcChanelService.findById(any())).thenReturn(getIbcChannel_2());
+
+        Derivative.DerivativeId derivativeId = new Derivative.DerivativeId("columbus-5", "uluna");
+        Derivative actualDerivative = new Derivative();
+        actualDerivative.setDerivativeId(derivativeId);
+
+        assertEquals(derivativeService.buildViaCashFlow(getCashflowWithReceivedOperation()), actualDerivative);
+    }
+
+    @Test
+    public void buildViaCashFlow_withIsReceivedOperationCounterpartyIsNull_Test() {
+        when(ibcChanelService.findById(any())).thenReturn(getIbcChannel_3());
+
+        Derivative actualDerivative = new Derivative();
+        actualDerivative.setSuccessfulBuild(false);
+
+        assertEquals(derivativeService.buildViaCashFlow(getCashflowWithReceivedOperation()).isSuccessfulBuild(), actualDerivative.isSuccessfulBuild());
     }
 
     private static Cashflow getCashflowWithDenomIsHash() {
@@ -99,7 +129,7 @@ public class DerivativeTest {
         return cashflow;
     }
 
-    private static Cashflow getCashflowWithReceivedOperaton() {
+    private static Cashflow getCashflowWithReceivedOperation() {
         Cashflow.CashflowId cashflowId = new Cashflow.CashflowId();
         cashflowId.setZone("columbus-5");
         cashflowId.setZoneSource("osmosis-1");
@@ -113,6 +143,33 @@ public class DerivativeTest {
         cashflow.setCashflowId(cashflowId);
 
         return cashflow;
+    }
+
+    private static IbcChannel getIbcChannel_1() {
+        IbcChannel.IbcChannelId ibcChannelId = new IbcChannel.IbcChannelId("columbus-5", "channel-0");
+
+        IbcChannel ibcChannel = new IbcChannel();
+        ibcChannel.setIbcChannelId(ibcChannelId);
+        ibcChannel.setCounterpartyChannelId("channel-1");
+        return ibcChannel;
+    }
+
+    private static IbcChannel getIbcChannel_2() {
+        IbcChannel.IbcChannelId ibcChannelId = new IbcChannel.IbcChannelId("columbus-5", "channel-0");
+
+        IbcChannel ibcChannel = new IbcChannel();
+        ibcChannel.setIbcChannelId(ibcChannelId);
+        ibcChannel.setCounterpartyChannelId("channel-72");
+        return ibcChannel;
+    }
+
+    private static IbcChannel getIbcChannel_3() {
+        IbcChannel.IbcChannelId ibcChannelId = new IbcChannel.IbcChannelId("columbus-5", "channel-0");
+
+        IbcChannel ibcChannel = new IbcChannel();
+        ibcChannel.setIbcChannelId(ibcChannelId);
+        ibcChannel.setCounterpartyChannelId(null);
+        return ibcChannel;
     }
 
 }
