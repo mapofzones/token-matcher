@@ -41,8 +41,9 @@ public class TokenPriceService implements ITokenPriceService {
             tokenPrice.setCoingeckoSymbolPriceInUsd(dto.getPrice());
             preparedTokenPriceList.add(tokenPrice);
         }
-
+        log.info("Ready to save all preparedTokenPriceList, size: " + preparedTokenPriceList.size());
         tokenPriceRepository.saveAll(preparedTokenPriceList);
+        log.info("Saved all preparedTokenPriceList, size: " + preparedTokenPriceList.size());
     }
 
     private LocalDateTime millisToLocalDateTime(long time) {

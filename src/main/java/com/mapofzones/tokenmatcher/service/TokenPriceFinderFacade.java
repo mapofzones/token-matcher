@@ -35,8 +35,10 @@ public class TokenPriceFinderFacade {
 
     public void findAllTokenPrices() {
         List<Token> unprocessedTokens = tokenService.FindAllByCoingeckoIsNotNull();
+        log.info("Tokens size: " + unprocessedTokens.size());
         if (!unprocessedTokens.isEmpty()) {
             cashflowQueue = new ArrayBlockingQueue<>(unprocessedTokens.size(), true, unprocessedTokens);
+            log.info("Cashflow queue size: " + cashflowQueue.size());
             tokenPriceFinderThreadStarter.startThreads(findTokenPriceFunction);
         }
     }
@@ -51,7 +53,9 @@ public class TokenPriceFinderFacade {
             if (!cashflowQueue.isEmpty()) {
                 try {
                     Token token = cashflowQueue.take();
+                    log.info("...Start findTokenPrice for zone: " + token.getTokenId().getZone());
                     findTokenPrice(token);
+                    log.info("...Finished findTokenPrice" + token.getTokenId().getZone());
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());

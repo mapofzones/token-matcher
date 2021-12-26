@@ -44,10 +44,11 @@ public class CoingeckoClient {
     public List<TokenPriceInSpecificHourDto> findTokenPrice(String coingeckoId) {
 
         List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId);
-
+        log.info("coingecko URIs size: " + uriList.size());
         List<TokenPriceInSpecificHourDto> dtoList = new ArrayList<>();
         if (!uriList.isEmpty()) {
             uriList.forEach(uri -> {
+                log.info("coingecko URI: " + uri.toString());
                 try {
                     ResponseEntity<String> response = tokenPriceRestTemplate.getForEntity(uri, String.class);
                     dtoList.addAll(jsonToDto(response.getBody()));
@@ -56,6 +57,7 @@ public class CoingeckoClient {
                 }
             });
         }
+        log.info("DTOs size: " + dtoList.size());
         return dtoList;
     }
 
