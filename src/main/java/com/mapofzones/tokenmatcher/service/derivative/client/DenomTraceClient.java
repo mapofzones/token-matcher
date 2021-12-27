@@ -31,7 +31,7 @@ public class DenomTraceClient {
 
 		if (!address.isEmpty()) {
 			URI uri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash));
-			log.info(String.valueOf((uri)));
+			//log.info(String.valueOf((uri)));
 
 			try {
 				ResponseEntity<String> response = denomTraceRestTemplate.getForEntity(uri, String.class);
@@ -39,7 +39,7 @@ public class DenomTraceClient {
 				receivedDenomTraceDto.setSuccessReceived(true);
 				return receivedDenomTraceDto;
 			} catch (RestClientException e) {
-				log.warn("Request cant be completed. " + uri);
+				//log.warn("Request cant be completed. " + uri);
 				return new DenomTraceDto(false);
 			}
 		}
