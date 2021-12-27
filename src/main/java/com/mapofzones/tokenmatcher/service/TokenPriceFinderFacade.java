@@ -2,11 +2,8 @@ package com.mapofzones.tokenmatcher.service;
 
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.domain.Token;
-import com.mapofzones.tokenmatcher.domain.TokenPrice;
 import com.mapofzones.tokenmatcher.service.token.ITokenService;
 import com.mapofzones.tokenmatcher.service.tokenprice.ITokenPriceService;
-import com.mapofzones.tokenmatcher.service.tokenprice.client.CoingeckoClient;
-import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceInSpecificHourDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

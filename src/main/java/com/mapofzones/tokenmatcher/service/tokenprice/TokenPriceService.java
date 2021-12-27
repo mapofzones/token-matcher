@@ -3,10 +3,11 @@ package com.mapofzones.tokenmatcher.service.tokenprice;
 import com.mapofzones.tokenmatcher.domain.Token;
 import com.mapofzones.tokenmatcher.domain.TokenPrice;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.CoingeckoClient;
-import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceInSpecificHourDto;
+import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,16 +30,16 @@ public class TokenPriceService implements ITokenPriceService {
 
     @Override
     public void findAndSaveTokenPriceByToken(Token token) {
-        List<TokenPriceInSpecificHourDto> dtoList = coingeckoClient.findTokenPrice(token.getCoingeckoId());
 
+        TokenPriceDto tokenPriceDto = coingeckoClient.findTokenPrice(token.getCoingeckoId());
         List<TokenPrice> preparedTokenPriceList = new ArrayList<>();
 
-        for (TokenPriceInSpecificHourDto dto : dtoList) {
+        for (List<String> priceInConcreteHour : tokenPriceDto.getPrices()) {
             TokenPrice.TokenPriceId tokenPriceId = new TokenPrice.TokenPriceId(token.getTokenId().getZone(),
-                    token.getTokenId().getBaseDenom(), millisToLocalDateTime(dto.getTimeInMillis()));
+                    token.getTokenId().getBaseDenom(), millisToLocalDateTime(Long.parseLong(priceInConcreteHour.get(0))));
 
             TokenPrice tokenPrice = new TokenPrice(tokenPriceId);
-            tokenPrice.setCoingeckoSymbolPriceInUsd(dto.getPrice());
+            tokenPrice.setCoingeckoSymbolPriceInUsd(BigDecimal.valueOf(Double.parseDouble(priceInConcreteHour.get(1))));
             preparedTokenPriceList.add(tokenPrice);
         }
         log.info("Ready to save all preparedTokenPriceList, size: " + preparedTokenPriceList.size());
