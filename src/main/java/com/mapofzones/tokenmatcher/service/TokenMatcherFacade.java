@@ -57,7 +57,7 @@ public class TokenMatcherFacade {
 				try {
 					Cashflow currentCashflow = cashflowQueue.take();
 					match(currentCashflow);
-					log.info(Thread.currentThread().getName() + " Start matching " + currentCashflow);
+					//log.info(Thread.currentThread().getName() + " Start matching " + currentCashflow);
 				} catch (InterruptedException e) {
 					log.error("Queue error. " + e.getCause());
 					e.printStackTrace();

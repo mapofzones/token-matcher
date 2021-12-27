@@ -104,7 +104,7 @@ public class DerivativeService implements IDerivativeService {
 	private String findCounterpartyChannel(IbcChannel.IbcChannelId channelId) {
 		String counterpartyChannel = ibcChanelService.findById(channelId).getCounterpartyChannelId();
 		if (counterpartyChannel == null) {
-			log.warn("Counterparty not found: " + channelId.toString());
+			//log.warn("Counterparty not found: " + channelId.toString());
 		}
 		return counterpartyChannel;
 	}
