@@ -34,13 +34,4 @@ public class Token {
 
     @Column(name = "coingecko_id")
     private String coingeckoId;
-
-    @Column(name = "logo_url")
-    private String logoUrl;
-
-    @Column(name = "symbol")
-    private String symbol;
-
-    @Column(name = "symbol_point_exponent")
-    private Integer symbolPointExponent;
 }
