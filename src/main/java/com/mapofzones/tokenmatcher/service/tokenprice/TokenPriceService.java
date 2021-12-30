@@ -6,6 +6,7 @@ import com.mapofzones.tokenmatcher.service.tokenprice.client.CoingeckoClient;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class TokenPriceService implements ITokenPriceService {
 
     private final CoingeckoClient coingeckoClient;
@@ -31,7 +33,9 @@ public class TokenPriceService implements ITokenPriceService {
     @Override
     public void findAndSaveTokenPriceByToken(Token token) {
 
-        TokenPriceDto tokenPriceDto = coingeckoClient.findTokenPrice(token.getCoingeckoId());
+        LocalDateTime lastTokenPriceTime = tokenPriceRepository.findLastTokenPriceByZone(token.getTokenId().getZone());
+
+        TokenPriceDto tokenPriceDto = coingeckoClient.findTokenPrice(token.getCoingeckoId(), lastTokenPriceTime);
         List<TokenPrice> preparedTokenPriceList = new ArrayList<>();
 
         for (List<String> priceInConcreteHour : tokenPriceDto.getPrices()) {

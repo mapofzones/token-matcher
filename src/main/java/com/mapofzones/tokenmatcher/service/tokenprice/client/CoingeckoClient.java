@@ -11,6 +11,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,9 @@ public class CoingeckoClient {
         this.endpointProperties = endpointProperties;
     }
 
-    public TokenPriceDto findTokenPrice(String coingeckoId) {
+    public TokenPriceDto findTokenPrice(String coingeckoId, LocalDateTime lastTokenPriceTime) {
 
-        List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId);
+        List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId, lastTokenPriceTime);
         log.info("coingecko URIs size: " + uriList.size());
         TokenPriceDto foundPrices = new TokenPriceDto();
         if (!uriList.isEmpty()) {
@@ -53,16 +54,23 @@ public class CoingeckoClient {
         return foundPrices;
     }
 
-    private List<URI> prepareURLForFindPartsOfRange(String coingeckoId) {
+    private List<URI> prepareURLForFindPartsOfRange(String coingeckoId, LocalDateTime lastTokenPriceTime) {
 
         List<URI> uriList = new ArrayList<>();
 
+        Long startDate;
+
         List<Long> days = new ArrayList<>();
-        days.add(START_DATE_IN_MILLIS);
+        if (lastTokenPriceTime == null) {
+            startDate = START_DATE_IN_MILLIS;
+        }
+        else startDate = lastTokenPriceTime.minusDays(2).toInstant(ZoneOffset.ofTotalSeconds(0)).toEpochMilli();
 
-        Long allDaysInMillis = calculateDaysBetweenStartDateAndNow();
+        days.add(startDate);
 
-        Long countMillis = START_DATE_IN_MILLIS;
+        Long allDaysInMillis = calculateDaysBetweenStartDateAndNow(startDate);
+
+        Long countMillis = startDate;
         for (int i = 0; i < allDaysInMillis / DAYS_IN_RANGE; i++) {
             countMillis = countMillis + DAYS_IN_RANGE;
             days.add(countMillis);
@@ -76,9 +84,9 @@ public class CoingeckoClient {
         return uriList;
     }
 
-    private long calculateDaysBetweenStartDateAndNow() {
+    private long calculateDaysBetweenStartDateAndNow(Long start) {
         LocalDateTime startDate = LocalDateTime
-                .ofInstant(Instant.ofEpochMilli(START_DATE_IN_MILLIS), ZoneId.systemDefault()).truncatedTo(ChronoUnit.HOURS);
+                .ofInstant(Instant.ofEpochMilli(start), ZoneId.systemDefault()).truncatedTo(ChronoUnit.HOURS);
         LocalDateTime now = LocalDateTime.now();
         return ChronoUnit.MILLIS.between(startDate, now);
     }
