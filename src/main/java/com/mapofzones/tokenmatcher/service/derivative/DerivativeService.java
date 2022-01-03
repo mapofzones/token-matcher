@@ -69,6 +69,8 @@ public class DerivativeService implements IDerivativeService {
 				unescrow(derivative);
 			} else if (counterpartyChannel != null){
 				escrow(cashflow, derivative);
+			} else if (isBaseDenom(cashflow.getCashflowId().getDenom())) {
+				escrow(cashflow, derivative);
 			} else derivative.setSuccessfulBuild(false);
 		}
 		return derivative;
@@ -141,5 +143,9 @@ public class DerivativeService implements IDerivativeService {
 		if (!channels.isEmpty())
 			return channels.stream().skip(channels.size() - 1).findFirst().orElse(EMPTY_STRING);
 		else return EMPTY_STRING;
+	}
+
+	private boolean isBaseDenom(String derivativeDenom) {
+		return !derivativeDenom.contains("transfer") && derivativeDenom.length() <= 8;
 	}
 }
