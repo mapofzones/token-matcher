@@ -13,9 +13,10 @@ public interface TokenRepository extends JpaRepository<Token, Token.TokenId> {
 
     List<Token> findAllByCoingeckoIdIsNotNull();
 
+    List<Token> findAllByOsmosisIdIsNotNull();
+
     @Modifying
     @Query(value = "INSERT INTO tokens (zone, base_denom) VALUES (?1, ?2) ON CONFLICT DO NOTHING", nativeQuery = true)
     void save(String zone, String baseDenom);
-
 
 }

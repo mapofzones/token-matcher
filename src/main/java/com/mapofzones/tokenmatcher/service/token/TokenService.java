@@ -23,7 +23,12 @@ public class TokenService implements ITokenService {
     }
 
     @Override
-    public List<Token> FindAllByCoingeckoIsNotNull() {
+    public List<Token> findAllByCoingeckoIsNotNull() {
         return tokenRepository.findAllByCoingeckoIdIsNotNull();
+    }
+
+    @Override
+    public List<Token> findAllByOsmosisIsNotNull() {
+        return tokenRepository.findAllByOsmosisIdIsNotNull();
     }
 }

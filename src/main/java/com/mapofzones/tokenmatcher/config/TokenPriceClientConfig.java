@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.CoingeckoClient;
+import com.mapofzones.tokenmatcher.service.tokenprice.client.OsmosisClient;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,12 @@ public class TokenPriceClientConfig {
     public CoingeckoClient coingeckoClient(RestTemplate tokenPriceRestTemplate,
                                            EndpointProperties endpointProperties) {
         return new CoingeckoClient(tokenPriceRestTemplate, endpointProperties);
+    }
+
+    @Bean
+    public OsmosisClient osmosisClient(RestTemplate tokenPriceRestTemplate,
+                                       EndpointProperties endpointProperties) {
+        return new OsmosisClient(tokenPriceRestTemplate, endpointProperties);
     }
 
 }

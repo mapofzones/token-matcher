@@ -2,7 +2,6 @@ token-matcher:
   sync-time: 120s
   threads: 8
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
-  batch-size: 1000
 
 pathfinder:
   sync-time: 120s
@@ -20,6 +19,9 @@ endpoint:
   coingecko:
     base-url: 'https://api.coingecko.com/api/v3'
     token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'
+  osmosis:
+    base-url: 'https://api-osmosis.imperator.co'
+    token-price-history: '/tokens/v1/historical/%s/chart?range=%s'
 
 spring:
   main:

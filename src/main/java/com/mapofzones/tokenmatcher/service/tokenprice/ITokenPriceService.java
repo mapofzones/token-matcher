@@ -4,6 +4,7 @@ import com.mapofzones.tokenmatcher.domain.Token;
 
 public interface ITokenPriceService {
 
-    void findAndSaveTokenPriceByToken(Token token);
+    void findAndSaveTokenPriceByCoingeckoId(Token token);
+    void findAndSaveTokenPriceByOsmosisId(Token token);
 
 }

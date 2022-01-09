@@ -35,6 +35,15 @@ public class ThreadStarter implements IThreadStarter{
     }
 
     @Override
+    public void waitMainThread() {
+        if (!cfList.isEmpty()) {
+            for (CompletableFuture<Void> voidCompletableFuture : cfList) {
+                voidCompletableFuture.join();
+            }
+        }
+    }
+
+    @Override
     public boolean isDone() {
         if (!cfList.isEmpty())
             return cfList.stream().allMatch(CompletableFuture::isDone);

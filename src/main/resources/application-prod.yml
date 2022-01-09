@@ -2,7 +2,6 @@ token-matcher:
   sync-time: ${TM_SYNC_TIME}
   threads: ${TM_THREADS}
   threads-naming: 'Pool-TokenMatcher-Thread-%d'
-  batch-size: 100 # Deprecated
 
 pathfinder:
   sync-time: ${PF_SYNC_TIME}

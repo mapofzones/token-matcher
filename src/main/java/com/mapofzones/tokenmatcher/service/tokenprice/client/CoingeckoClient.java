@@ -1,7 +1,8 @@
 package com.mapofzones.tokenmatcher.service.tokenprice.client;
 
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
-import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.TokenPriceDto;
+import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.CoingeckoTokenPriceDto;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
@@ -17,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.mapofzones.tokenmatcher.common.constants.DateConstants.DAYS_IN_RANGE;
+import static com.mapofzones.tokenmatcher.common.constants.DateConstants.MILLIS_IN_DAY;
+import static com.mapofzones.tokenmatcher.common.constants.DateConstants.START_DATE_IN_MILLIS;
+
 @Slf4j
 public class CoingeckoClient {
-
-    // 2021-01-01
-    private final static Long START_DATE_IN_MILLIS = 1609448400000L;
-    private final static Long MILLIS_IN_DAY = 86400000L;
-    private final static Long DAYS_IN_RANGE = 50 * MILLIS_IN_DAY;
 
     private final RestTemplate tokenPriceRestTemplate;
     private final EndpointProperties endpointProperties;
@@ -34,16 +34,16 @@ public class CoingeckoClient {
         this.endpointProperties = endpointProperties;
     }
 
-    public TokenPriceDto findTokenPrice(String coingeckoId, LocalDateTime lastTokenPriceTime) {
+    public CoingeckoTokenPriceDto findTokenPrice(String coingeckoId, @NonNull LocalDateTime lastTokenPriceTime) {
 
         List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId, lastTokenPriceTime);
         log.info("coingecko URIs size: " + uriList.size());
-        TokenPriceDto foundPrices = new TokenPriceDto();
+        CoingeckoTokenPriceDto foundPrices = new CoingeckoTokenPriceDto();
         if (!uriList.isEmpty()) {
             for (URI uri : uriList) {
                 log.info("coingecko URI: " + uri.toString());
                 try {
-                    ResponseEntity<TokenPriceDto> response = tokenPriceRestTemplate.getForEntity(uri, TokenPriceDto.class);
+                    ResponseEntity<CoingeckoTokenPriceDto> response = tokenPriceRestTemplate.getForEntity(uri, CoingeckoTokenPriceDto.class);
                     foundPrices.addPricesRows(Objects.requireNonNull(response.getBody()).getPrices());
                 } catch (RestClientException e) {
                     log.warn("(CoingeckoClient)Request cant be completed. " + uri);
@@ -76,10 +76,22 @@ public class CoingeckoClient {
             days.add(countMillis);
         }
 
-        days.forEach(d -> uriList.add(URI.create(
-                String.format(
-                        endpointProperties.getCoingecko().getBaseUrl() + endpointProperties.getCoingecko().getTokenPriceHistory(),
-                        coingeckoId, d / 1000, (d + DAYS_IN_RANGE) / 1000))));
+        for (Long day : days) {
+
+            long untilDay = day + DAYS_IN_RANGE;
+
+            if (untilDay > System.currentTimeMillis())
+                untilDay = System.currentTimeMillis();
+
+            if (day > untilDay - 2*MILLIS_IN_DAY)
+                day = untilDay - 2*MILLIS_IN_DAY;
+
+            URI uri = URI.create(String.format(
+                    endpointProperties.getCoingecko().getBaseUrl() + endpointProperties.getCoingecko().getTokenPriceHistory(),
+                    coingeckoId, day / 1000, untilDay / 1000));
+
+            uriList.add(uri);
+        }
 
         return uriList;
     }

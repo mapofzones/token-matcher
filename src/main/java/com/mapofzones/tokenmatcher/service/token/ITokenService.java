@@ -7,6 +7,7 @@ import java.util.List;
 public interface ITokenService {
 
     void save(Token token);
-    List<Token> FindAllByCoingeckoIsNotNull();
+    List<Token> findAllByCoingeckoIsNotNull();
+    List<Token> findAllByOsmosisIsNotNull();
 
 }

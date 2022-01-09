@@ -11,6 +11,7 @@ public class EndpointProperties {
 
     private IBC ibc;
     private Coingecko coingecko;
+    private Osmosis osmosis;
 
     @Getter
     @Setter
@@ -21,6 +22,13 @@ public class EndpointProperties {
     @Getter
     @Setter
     public static class Coingecko {
+        private String baseUrl;
+        private String tokenPriceHistory;
+    }
+
+    @Getter
+    @Setter
+    public static class Osmosis {
         private String baseUrl;
         private String tokenPriceHistory;
     }

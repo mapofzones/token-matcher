@@ -34,4 +34,8 @@ public class Token {
 
     @Column(name = "coingecko_id")
     private String coingeckoId;
+
+    @Column(name = "osmosis_id")
+    private String osmosisId;
+
 }

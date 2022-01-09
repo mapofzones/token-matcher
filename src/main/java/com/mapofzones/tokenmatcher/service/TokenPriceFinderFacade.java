@@ -20,7 +20,8 @@ public class TokenPriceFinderFacade {
     private final IThreadStarter tokenPriceFinderThreadStarter;
     private final ITokenPriceService tokenPriceService;
 
-    private BlockingQueue<Token> cashflowQueue;
+    private BlockingQueue<Token> coingeckoIds;
+    private BlockingQueue<Token> osmosisIds;
 
     public TokenPriceFinderFacade(ITokenService tokenService,
                                   IThreadStarter tokenPriceFinderThreadStarter,
@@ -31,28 +32,62 @@ public class TokenPriceFinderFacade {
     }
 
     public void findAllTokenPrices() {
-        List<Token> unprocessedTokens = tokenService.FindAllByCoingeckoIsNotNull();
-        log.info("Tokens size: " + unprocessedTokens.size());
-        if (!unprocessedTokens.isEmpty()) {
-            cashflowQueue = new ArrayBlockingQueue<>(unprocessedTokens.size(), true, unprocessedTokens);
-            log.info("Cashflow queue size: " + cashflowQueue.size());
-            tokenPriceFinderThreadStarter.startThreads(findTokenPriceFunction);
+        List<Token> unprocessedCoingeckoIds = tokenService.findAllByCoingeckoIsNotNull();
+        log.info("Tokens size: " + unprocessedCoingeckoIds.size());
+        if (!unprocessedCoingeckoIds.isEmpty()) {
+            coingeckoIds = new ArrayBlockingQueue<>(unprocessedCoingeckoIds.size(), true, unprocessedCoingeckoIds);
+            log.info("Cashflow queue size: " + coingeckoIds.size());
+            tokenPriceFinderThreadStarter.startThreads(findTokenPriceInCoingeckoFunction);
+            tokenPriceFinderThreadStarter.waitMainThread();
         }
+
+        List<Token> unprocessedOsmosisTokens = tokenService.findAllByOsmosisIsNotNull();
+        log.info("Tokens size: " + unprocessedOsmosisTokens.size());
+        if (!unprocessedOsmosisTokens.isEmpty()) {
+            osmosisIds = new ArrayBlockingQueue<>(unprocessedOsmosisTokens.size(), true, unprocessedOsmosisTokens);
+            log.info("Cashflow queue size: " + osmosisIds.size());
+            tokenPriceFinderThreadStarter.startThreads(findTokenPriceInOsmosisFunction);
+            tokenPriceFinderThreadStarter.waitMainThread();
+        }
+
     }
 
     @Transactional
-    public void findTokenPrice(Token token) {
-        tokenPriceService.findAndSaveTokenPriceByToken(token);
+    public void findTokenPriceByCoingeckoId(Token token) {
+        tokenPriceService.findAndSaveTokenPriceByCoingeckoId(token);
     }
 
-    private final Runnable findTokenPriceFunction = () -> {
+    @Transactional
+    public void findTokenPriceByOsmosisId(Token token) {
+        tokenPriceService.findAndSaveTokenPriceByOsmosisId(token);
+    }
+
+    private final Runnable findTokenPriceInCoingeckoFunction = () -> {
         while (true) {
-            if (!cashflowQueue.isEmpty()) {
+            if (!coingeckoIds.isEmpty()) {
                 try {
-                    Token token = cashflowQueue.take();
-                    log.info("...Start findTokenPrice for zone: " + token.getTokenId().getZone());
-                    findTokenPrice(token);
-                    log.info("...Finished findTokenPrice" + token.getTokenId().getZone());
+                    Token token = coingeckoIds.take();
+                    log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone());
+                    findTokenPriceByCoingeckoId(token);
+                    log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
+                    log.info(Thread.currentThread().getName() + " Start matching " + token);
+                } catch (InterruptedException e) {
+                    log.error("Queue error. " + e.getCause());
+                    e.printStackTrace();
+                }
+            }
+            else break;
+        }
+    };
+
+    private final Runnable findTokenPriceInOsmosisFunction = () -> {
+        while (true) {
+            if (!osmosisIds.isEmpty()) {
+                try {
+                    Token token = osmosisIds.take();
+                    log.info("...Start findTokenPrice in osmosis for zone: " + token.getTokenId().getZone());
+                    findTokenPriceByOsmosisId(token);
+                    log.info("...Finished findTokenPrice in osmosis" + token.getTokenId().getZone());
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());

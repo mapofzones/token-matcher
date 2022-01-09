@@ -1,19 +1,17 @@
 package com.mapofzones.tokenmatcher.config;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
+import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mapofzones.tokenmatcher.common.properties.TokenMatcherProperties;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 
 @Configuration
 public class DenomTraceClientConfig {

@@ -9,6 +9,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "token-matcher")
 public class TokenMatcherProperties extends BaseProperties {
 
-	private Integer batchSize;
 
 }
