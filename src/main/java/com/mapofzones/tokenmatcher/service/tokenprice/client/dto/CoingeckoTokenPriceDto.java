@@ -26,6 +26,6 @@ public class CoingeckoTokenPriceDto {
     }
 
     public LocalDateTime getLastPriceTime() {
-        return TimeHelper.millisToLocalDateTime(Long.parseLong(prices.get(prices.size() - 1).get(0)));
+        return prices.isEmpty() ? LocalDateTime.now() : TimeHelper.millisToLocalDateTime(Long.parseLong(prices.get(prices.size() - 1).get(0)));
     }
 }

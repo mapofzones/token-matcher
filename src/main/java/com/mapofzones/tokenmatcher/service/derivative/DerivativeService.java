@@ -125,7 +125,7 @@ public class DerivativeService implements IDerivativeService {
 
 	private void unescrow(Derivative derivative) {
 		String lastUsedChannel = findLastUsedChannelInDenom(derivative.getDerivativeId().getFullDenom());
-		String fullDenom = derivative.getDerivativeId().getFullDenom().replace(lastUsedChannel + "/", EMPTY_STRING);
+		String fullDenom = derivative.getDerivativeId().getFullDenom().replaceFirst(lastUsedChannel + "/", EMPTY_STRING);
 		derivative.getDerivativeId().setFullDenom(fullDenom);
 	}
 
@@ -141,7 +141,7 @@ public class DerivativeService implements IDerivativeService {
 			channels.add(methodMatcher.group());
 
 		if (!channels.isEmpty())
-			return channels.stream().skip(channels.size() - 1).findFirst().orElse(EMPTY_STRING);
+			return channels.stream().skip(0).findFirst().orElse(EMPTY_STRING);
 		else return EMPTY_STRING;
 	}
 

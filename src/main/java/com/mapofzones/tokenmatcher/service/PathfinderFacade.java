@@ -60,7 +60,7 @@ public class PathfinderFacade {
 
             token.setTokenId(new Token.TokenId(originZone, baseDenom));
 
-            if (originZone.isEmpty()) {
+            if (originZone.isBlank()) {
                 return;
             }
 
@@ -94,10 +94,7 @@ public class PathfinderFacade {
 
             if (foundZone != null)
                 return findOriginZone(foundZone.getChainId(), channelIterator);
-            else if (!channelIterator.hasNext())
-                return zone;
-            else
-                return "";
+            else return "";
 
         } else {
             return zone;
