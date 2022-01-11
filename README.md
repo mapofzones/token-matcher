@@ -18,6 +18,17 @@ Running directly:
 * `mvn package -DskipTests` or `mvn package`
 * `java -jar /opt/app.jar --spring.profiles.active=prod`
 
+Config parameters:
+* `TM_SYNC_TIME` - time between iterations in 'TokenMatcher' 
+* `TM_THREADS` - number of threads for 'TokenMatcher'
+* `PF_SYNC_TIME`time between iterations in 'PathFinder'
+* `PF_THREADS` - number of threads for 'PathFinder'
+* `TPF_SYNC_TIME` - time between iterations in 'TokenPriceFinder'
+* `TPF_THREADS` - number of threads for 'TokenPriceFinder'
+* `DB_URL` - URL of DB
+* `DB_USER` - DB username
+* `DB_PASS` - DB password
+
 Running in a container:
 * `docker build -t token-matcher:v1 .`
 * `docker run --env TM_SYNC_TIME="120s" --env TM_THREADS=4  --env PF_SYNC_TIME="120s" --env PF_THREADS=1 --env TPF_SYNC_TIME="120s" --env TPF_THREADS=1 --env DB_URL=jdbc:postgresql://<ip>:<port>/<db> --env DB_USER=<db_user> --env DB_PASS=<db_user_pass> -it -d --network="host" token-matcher:v1`
