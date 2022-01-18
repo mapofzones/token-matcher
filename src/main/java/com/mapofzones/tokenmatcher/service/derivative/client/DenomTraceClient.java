@@ -31,16 +31,12 @@ public class DenomTraceClient {
 
 		if (!address.isEmpty()) {
 			URI uri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash));
-			//log.info(String.valueOf((uri)));
-
-			try {
-				ResponseEntity<String> response = denomTraceRestTemplate.getForEntity(uri, String.class);
-				DenomTraceDto receivedDenomTraceDto = jsonToDto(response.getBody());
-				receivedDenomTraceDto.setSuccessReceived(true);
-				return receivedDenomTraceDto;
-			} catch (RestClientException e) {
-				//log.warn("Request cant be completed. " + uri);
-				return new DenomTraceDto(false);
+			DenomTraceDto dto = doRequest(uri);
+			if (dto.isSuccessReceived())
+				return dto;
+			else {
+				URI betaUri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTraceBeta(), hash));
+				return doRequest(betaUri);
 			}
 		}
 		return new DenomTraceDto();
@@ -54,5 +50,17 @@ public class DenomTraceClient {
 			throw new JsonParceException("Cant parse json", e.getCause());
 		}
 	}
-	
+
+	private DenomTraceDto doRequest(URI address) {
+		try {
+			ResponseEntity<String> response = denomTraceRestTemplate.getForEntity(address, String.class);
+			DenomTraceDto receivedDenomTraceDto = jsonToDto(response.getBody());
+			receivedDenomTraceDto.setSuccessReceived(true);
+			return receivedDenomTraceDto;
+		} catch (RestClientException e) {
+			//log.warn("Request cant be completed. " + address);
+			return new DenomTraceDto(false);
+		}
+	}
+
 }

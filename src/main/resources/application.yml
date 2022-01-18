@@ -15,7 +15,8 @@ token-price-finder:
 
 endpoint:
   ibc:
-    denom-trace: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
+    denom-trace-beta: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
+    denom-trace: '/ibc/apps/transfer/v1/denom_traces/%s'
   coingecko:
     base-url: 'https://api.coingecko.com/api/v3'
     token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'

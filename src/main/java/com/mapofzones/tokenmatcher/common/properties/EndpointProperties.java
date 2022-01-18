@@ -16,6 +16,7 @@ public class EndpointProperties {
     @Getter
     @Setter
     public static class IBC {
+        private String denomTraceBeta;
         private String denomTrace;
     }
 
