@@ -2,12 +2,12 @@ package com.mapofzones.tokenmatcher.service.derivative;
 
 import com.mapofzones.tokenmatcher.common.exceptions.EntityNotFoundException;
 import com.mapofzones.tokenmatcher.domain.Cashflow;
+import com.mapofzones.tokenmatcher.domain.DenomTrace;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.domain.IbcChannel;
 import com.mapofzones.tokenmatcher.domain.Token;
 import com.mapofzones.tokenmatcher.domain.ZoneNode;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
+import com.mapofzones.tokenmatcher.service.denomtraces.IDenomTraceService;
 import com.mapofzones.tokenmatcher.service.ibcchannel.IIbcChanelService;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,23 +27,23 @@ public class DerivativeService implements IDerivativeService {
 	private final String EMPTY_STRING = "";
 
 	private final DerivativeRepository derivativeRepository;
-	private final DenomTraceClient denomTraceClient;
 	private final IZoneNodeService zoneNodeService;
 	private final IIbcChanelService ibcChanelService;
+	private final IDenomTraceService denomTraceService;
 
 	public DerivativeService(DerivativeRepository derivativeRepository,
-							 DenomTraceClient denomTraceClient,
 							 IZoneNodeService zoneNodeService,
-							 IIbcChanelService ibcChanelService) {
+							 IIbcChanelService ibcChanelService,
+							 IDenomTraceService denomTraceService) {
 		this.derivativeRepository = derivativeRepository;
-		this.denomTraceClient = denomTraceClient;
 		this.zoneNodeService = zoneNodeService;
 		this.ibcChanelService = ibcChanelService;
+		this.denomTraceService = denomTraceService;
 	}
 
 	@Override
-	public Derivative save(Derivative derivative) {
-		return derivativeRepository.save(derivative);
+	public void save(Derivative derivative) {
+		derivativeRepository.save(derivative.getDerivativeId().getZone(), derivative.getDerivativeId().getFullDenom());
 	}
 
 	@Override
@@ -73,6 +73,7 @@ public class DerivativeService implements IDerivativeService {
 				escrow(cashflow, derivative);
 			} else derivative.setSuccessfulBuild(false);
 		}
+
 		return derivative;
 	}
 
@@ -91,16 +92,25 @@ public class DerivativeService implements IDerivativeService {
 		return cashflow.getCashflowId().getZone().equals(cashflow.getCashflowId().getZoneDestination());
 	}
 
+	private void setFullDenomByIbcHash(Cashflow cashflow, Derivative derivative) {
+
+		DenomTrace foundViaCache = denomTraceService.findByIbcHashViaCache(cashflow.getCashflowId().getDenom());
+
+		if (foundViaCache.isSuccessfulReceived()) {
+			derivative.setDenomTraceData(foundViaCache);
+		} else {
+			String address = findAddressByZone(cashflow.getCashflowId().getZone());
+			DenomTrace foundViaRestApi = denomTraceService.findByIbcHashViaRestApi(address, cashflow.getCashflowId().getDenom());
+			if (foundViaRestApi.isSuccessfulReceived()) {
+				DenomTrace savedViaRestApi = denomTraceService.save(foundViaRestApi);
+				derivative.setDenomTraceData(savedViaRestApi);
+			} else derivative.setSuccessfulBuild(false);
+		}
+	}
+
 	private String findAddressByZone(String zone) {
 		ZoneNode zoneNode = zoneNodeService.getAliveByName(zone);
 		return zoneNode.getLcdAddress() != null ? zoneNode.getLcdAddress() : EMPTY_STRING;
-	}
-
-	private void setFullDenomByIbcHash(Cashflow cashflow, Derivative derivative) {
-		String address = findAddressByZone(cashflow.getCashflowId().getZone());
-		DenomTraceDto foundDto = denomTraceClient
-				.findDenomTrace(address, cashflow.getCashflowId().getDenom().replace("ibc/", EMPTY_STRING));
-		derivative.setDenomTraceData(foundDto);
 	}
 
 	private String findCounterpartyChannel(IbcChannel.IbcChannelId channelId) {

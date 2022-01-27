@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.domain;
 
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,9 +42,9 @@ public class Derivative {
 	@Transient
 	private boolean isSuccessfulBuild = true;
 
-	public void setDenomTraceData(DenomTraceDto dto) {
-		derivativeId.fullDenom = dto.getFullDenom() + "/" + dto.getBaseDenom();
-		this.isSuccessfulBuild = dto.isSuccessReceived();
+	public void setDenomTraceData(DenomTrace denomTrace) {
+		derivativeId.fullDenom = denomTrace.getPath() + "/" + denomTrace.getBaseDenom();
+		this.isSuccessfulBuild = denomTrace.isSuccessfulReceived();
 	}
 
 	public void setTokenIdData(Token.TokenId tokenId) {

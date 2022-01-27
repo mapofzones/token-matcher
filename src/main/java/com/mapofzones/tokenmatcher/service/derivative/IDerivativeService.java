@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IDerivativeService {
 
-	Derivative save(Derivative derivative);
+	void save(Derivative derivative);
 	List<Derivative> findIncomplete();
 	Derivative buildViaCashFlow(Cashflow cashflow);
 	void setTokenIdData(Derivative.DerivativeId derivativeId, Token.TokenId tokenId);

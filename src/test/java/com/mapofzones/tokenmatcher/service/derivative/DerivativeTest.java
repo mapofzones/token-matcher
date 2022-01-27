@@ -1,11 +1,14 @@
 package com.mapofzones.tokenmatcher.service.derivative;
 
 import com.mapofzones.tokenmatcher.domain.Cashflow;
+import com.mapofzones.tokenmatcher.domain.DenomTrace;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.domain.IbcChannel;
 import com.mapofzones.tokenmatcher.domain.ZoneNode;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceDto;
+import com.mapofzones.tokenmatcher.service.denomtraces.DenomTraceService;
+import com.mapofzones.tokenmatcher.service.denomtraces.IDenomTraceService;
+import com.mapofzones.tokenmatcher.service.denomtraces.client.DenomTraceClient;
+import com.mapofzones.tokenmatcher.service.denomtraces.client.DenomTraceDto;
 import com.mapofzones.tokenmatcher.service.ibcchannel.IIbcChanelService;
 import com.mapofzones.tokenmatcher.service.ibcchannel.IbcChanelService;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
@@ -30,6 +33,8 @@ public class DerivativeTest {
     private IZoneNodeService zoneNodeService;
     @Mock
     private IIbcChanelService ibcChanelService;
+    @Mock
+    private IDenomTraceService denomTraceService;
 
     private IDerivativeService derivativeService;
 
@@ -38,13 +43,17 @@ public class DerivativeTest {
         denomTraceClient = Mockito.mock(DenomTraceClient.class);
         zoneNodeService = Mockito.mock(ZoneNodeService.class);
         ibcChanelService = Mockito.mock(IbcChanelService.class);
-        derivativeService = new DerivativeService(null, denomTraceClient, zoneNodeService, ibcChanelService);
+        denomTraceService = Mockito.mock(DenomTraceService.class);
+        derivativeService = new DerivativeService(null, zoneNodeService, ibcChanelService, denomTraceService);
     }
 
     @Test
     public void buildViaCashFlow_withDenomIsHash_Test() {
-        when(denomTraceClient.findDenomTrace(anyString(), anyString()))
-                .thenReturn(new DenomTraceDto("transfer/channel-47/transfer/channel-18", "uluna", true));
+        when(denomTraceService.findByIbcHashViaRestApi(anyString(), anyString()))
+                .thenReturn(new DenomTrace(new DenomTraceDto("transfer/channel-47/transfer/channel-18", "uluna", true)));
+
+        when(denomTraceService.findByIbcHashViaCache(anyString()))
+                .thenReturn(new DenomTrace(new DenomTraceDto("transfer/channel-47/transfer/channel-18", "uluna", true)));
 
         when(zoneNodeService.getAliveByName(anyString()))
                 .thenReturn(new ZoneNode(null, null, null, "http://35.235.89.254:1317", null));

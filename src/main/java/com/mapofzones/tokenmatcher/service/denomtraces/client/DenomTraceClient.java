@@ -1,4 +1,4 @@
-package com.mapofzones.tokenmatcher.service.derivative.client;
+package com.mapofzones.tokenmatcher.service.denomtraces.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,14 +30,16 @@ public class DenomTraceClient {
 	public DenomTraceDto findDenomTrace(String address, String hash) {
 
 		if (!address.isEmpty()) {
-			URI uri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), hash));
+			String cutHash = hash.replace("ibc/", "");
+			URI uri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTrace(), cutHash));
 			DenomTraceDto dto = doRequest(uri);
-			if (dto.isSuccessReceived())
-				return dto;
-			else {
-				URI betaUri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTraceBeta(), hash));
-				return doRequest(betaUri);
+
+			if (!dto.isSuccessReceived()) {
+				URI betaUri = URI.create(address + String.format(endpointProperties.getIbc().getDenomTraceBeta(), cutHash));
+				dto = doRequest(betaUri);
 			}
+			dto.setIbcHash(hash);
+			return dto;
 		}
 		return new DenomTraceDto();
 	}

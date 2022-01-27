@@ -73,7 +73,7 @@ public class TokenPriceFinderFacade {
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
             else break;

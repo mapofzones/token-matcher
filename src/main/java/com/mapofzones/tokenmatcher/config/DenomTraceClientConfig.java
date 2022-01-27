@@ -3,7 +3,7 @@ package com.mapofzones.tokenmatcher.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
-import com.mapofzones.tokenmatcher.service.derivative.client.DenomTraceClient;
+import com.mapofzones.tokenmatcher.service.denomtraces.client.DenomTraceClient;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

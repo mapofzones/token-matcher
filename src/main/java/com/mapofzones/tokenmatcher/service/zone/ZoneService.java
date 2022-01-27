@@ -18,7 +18,4 @@ public class ZoneService implements IZoneService {
     public Zone findOriginZone(String zoneName, String channel) {
         return zoneRepository.findZoneByChannelAndZoneName(zoneName, channel);
     }
-
-
-
 }

@@ -1,4 +1,4 @@
-package com.mapofzones.tokenmatcher.service.derivative.client;
+package com.mapofzones.tokenmatcher.service.denomtraces.client;
 
 
 import com.mapofzones.tokenmatcher.AbstractTest;

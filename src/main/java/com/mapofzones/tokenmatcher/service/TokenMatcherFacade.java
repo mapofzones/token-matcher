@@ -44,9 +44,9 @@ public class TokenMatcherFacade {
 		Derivative builtDerivative = derivativeService.buildViaCashFlow(cashflow);
 
 		if (builtDerivative.isSuccessfulBuild()) {
-			Derivative savedDerivative = derivativeService.save(builtDerivative);
-			log.info("Saved: " + savedDerivative.toString());
-			Cashflow matchedCashflow = cashflowService.matchWithDerivative(cashflow.getCashflowId(), savedDerivative.getDerivativeId());
+			derivativeService.save(builtDerivative);
+			log.info("Saved: " + builtDerivative);
+			Cashflow matchedCashflow = cashflowService.matchWithDerivative(cashflow.getCashflowId(), builtDerivative.getDerivativeId());
 			log.info("Matched with derivative denom: " + matchedCashflow.getDerivativeDenom());
 		}
 	}
@@ -60,7 +60,7 @@ public class TokenMatcherFacade {
 					//log.info(Thread.currentThread().getName() + " Start matching " + currentCashflow);
 				} catch (InterruptedException e) {
 					log.error("Queue error. " + e.getCause());
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 			}
 			else break;

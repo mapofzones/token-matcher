@@ -1,4 +1,4 @@
-package com.mapofzones.tokenmatcher.service.derivative.client;
+package com.mapofzones.tokenmatcher.service.denomtraces.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,17 +20,20 @@ public class DenomTraceDto {
 		this.isSuccessReceived = isSuccessReceived;
 	}
 
-	public DenomTraceDto(String fullDenom, String baseDenom, boolean isSuccessReceived) {
-		this.fullDenom = fullDenom;
+	public DenomTraceDto(String path, String baseDenom, boolean isSuccessReceived) {
+		this.path = path;
 		this.baseDenom = baseDenom;
 		this.isSuccessReceived = isSuccessReceived;
 	}
 
 	@JsonProperty("path")
-	private String fullDenom;
+	private String path;
 
 	@JsonProperty("base_denom")
 	private String baseDenom;
+
+	@JsonIgnore
+	private String ibcHash;
 
 	@JsonIgnore
 	private boolean isSuccessReceived;

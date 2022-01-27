@@ -80,7 +80,7 @@ public class PathfinderFacade {
                     find(currentDerivative);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
             else break;
