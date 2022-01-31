@@ -156,6 +156,7 @@ public class DerivativeService implements IDerivativeService {
 	}
 
 	private boolean isBaseDenom(String derivativeDenom) {
-		return !derivativeDenom.contains("transfer") && derivativeDenom.length() <= 8;
+		int maxSymbolsOfBaseDenom = 10;
+		return !derivativeDenom.contains("transfer") && derivativeDenom.length() <= maxSymbolsOfBaseDenom;
 	}
 }
