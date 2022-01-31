@@ -1,15 +1,12 @@
 package com.mapofzones.tokenmatcher.service.cashflow;
 
-import java.util.List;
-
 import com.mapofzones.tokenmatcher.common.exceptions.EntityNotFoundException;
+import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.Derivative;
-import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mapofzones.tokenmatcher.domain.Cashflow;
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,7 +25,7 @@ public class CashflowService implements ICashflowService {
 
 	@Override
 	public List<Cashflow> findUnmatchedCashflow() {
-		return cashflowRepository.findAllByDerivativeDenomIsNull();
+		return cashflowRepository.findAllByDerivativeDenomIsNullAndDenomIsNotEmpty();
 	}
 
 	@Override
