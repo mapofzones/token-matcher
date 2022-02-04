@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,8 +28,6 @@ import static org.mockito.Mockito.when;
 
 public class DerivativeTest {
 
-    @Mock
-    private DenomTraceClient denomTraceClient;
     @Mock
     private IZoneNodeService zoneNodeService;
     @Mock
@@ -40,7 +39,6 @@ public class DerivativeTest {
 
     @BeforeEach
     public void setUp() {
-        denomTraceClient = Mockito.mock(DenomTraceClient.class);
         zoneNodeService = Mockito.mock(ZoneNodeService.class);
         ibcChanelService = Mockito.mock(IbcChanelService.class);
         denomTraceService = Mockito.mock(DenomTraceService.class);
@@ -56,7 +54,7 @@ public class DerivativeTest {
                 .thenReturn(new DenomTrace(new DenomTraceDto("transfer/channel-47/transfer/channel-18", "uluna", true)));
 
         when(zoneNodeService.getAliveByName(anyString()))
-                .thenReturn(new ZoneNode(null, null, null, "http://35.235.89.254:1317", null));
+                .thenReturn(Collections.singletonList(new ZoneNode(null, null, null, "http://35.235.89.254:1317", null)));
 
         Derivative.DerivativeId derivativeId = new Derivative.DerivativeId("osmosis-1", "transfer/channel-47/transfer/channel-18/uluna");
         Derivative actualDerivative = new Derivative();

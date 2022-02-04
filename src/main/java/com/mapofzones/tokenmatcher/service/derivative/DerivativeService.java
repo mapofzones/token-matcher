@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,7 +110,8 @@ public class DerivativeService implements IDerivativeService {
 	}
 
 	private String findAddressByZone(String zone) {
-		ZoneNode zoneNode = zoneNodeService.getAliveByName(zone);
+		List<ZoneNode> aliveZoneNodes = zoneNodeService.getAliveByName(zone);
+		ZoneNode zoneNode = aliveZoneNodes.get((int)(Math.random() * aliveZoneNodes.size()));
 		return zoneNode.getLcdAddress() != null ? zoneNode.getLcdAddress() : EMPTY_STRING;
 	}
 
