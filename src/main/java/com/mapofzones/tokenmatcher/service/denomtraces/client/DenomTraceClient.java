@@ -26,7 +26,6 @@ public class DenomTraceClient {
 		this.denomTraceObjectMapper = denomTraceObjectMapper;
 	}
 
-	// TODO: Need to refactoring when findRest wos implemented
 	public DenomTraceDto findDenomTrace(String address, String hash) {
 
 		if (!address.isEmpty()) {
@@ -60,7 +59,7 @@ public class DenomTraceClient {
 			receivedDenomTraceDto.setSuccessReceived(true);
 			return receivedDenomTraceDto;
 		} catch (RestClientException e) {
-			//log.warn("Request cant be completed. " + address);
+			log.warn("Request cant be completed. " + address);
 			return new DenomTraceDto(false);
 		}
 	}
