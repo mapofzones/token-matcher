@@ -5,6 +5,7 @@ import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.CoingeckoTokenP
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,7 +24,7 @@ import static com.mapofzones.tokenmatcher.common.constants.DateConstants.MILLIS_
 import static com.mapofzones.tokenmatcher.common.constants.DateConstants.START_DATE_IN_MILLIS;
 
 @Slf4j
-public class CoingeckoClient {
+public class CoingeckoClient implements ITokenPriceClient {
 
     private final RestTemplate tokenPriceRestTemplate;
     private final EndpointProperties endpointProperties;
@@ -36,9 +37,15 @@ public class CoingeckoClient {
 
     public CoingeckoTokenPriceDto findTokenPrice(String coingeckoId, @NonNull LocalDateTime lastTokenPriceTime) {
 
+        CoingeckoTokenPriceDto foundPrices = new CoingeckoTokenPriceDto();
+
+        if (coingeckoId == null) {
+            log.warn("Coingecko token id is null");
+            return foundPrices;
+        }
+
         List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId, lastTokenPriceTime);
         log.info("coingecko URIs size: " + uriList.size());
-        CoingeckoTokenPriceDto foundPrices = new CoingeckoTokenPriceDto();
         if (!uriList.isEmpty()) {
             for (URI uri : uriList) {
                 log.info("coingecko URI: " + uri.toString());
@@ -83,12 +90,12 @@ public class CoingeckoClient {
             if (untilDay > System.currentTimeMillis())
                 untilDay = System.currentTimeMillis();
 
-            if (day > untilDay - 2*MILLIS_IN_DAY)
-                day = untilDay - 2*MILLIS_IN_DAY;
+            if (day > untilDay - MILLIS_IN_DAY)
+                day = untilDay - MILLIS_IN_DAY;
 
             URI uri = URI.create(String.format(
                     endpointProperties.getCoingecko().getBaseUrl() + endpointProperties.getCoingecko().getTokenPriceHistory(),
-                    coingeckoId, day / 1000, untilDay / 1000));
+                    coingeckoId, day / 1000 + 1, untilDay / 1000));
 
             uriList.add(uri);
         }

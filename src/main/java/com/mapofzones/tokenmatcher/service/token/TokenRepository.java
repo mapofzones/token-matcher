@@ -1,7 +1,8 @@
 package com.mapofzones.tokenmatcher.service.token;
 
-import com.mapofzones.tokenmatcher.domain.Token;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.mapofzones.tokenmatcher.domain.token.Token;
+import com.mapofzones.tokenmatcher.domain.token.TokenId;
+import com.mapofzones.tokenmatcher.service.base.IGenericRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TokenRepository extends JpaRepository<Token, Token.TokenId> {
+public interface TokenRepository extends IGenericRepository<Token, TokenId> {
 
     List<Token> findAllByCoingeckoIdIsNotNull();
 

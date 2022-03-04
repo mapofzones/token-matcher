@@ -2,7 +2,7 @@ package com.mapofzones.tokenmatcher.service.denomtraces.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mapofzones.tokenmatcher.common.exceptions.JsonParceException;
+import com.mapofzones.tokenmatcher.common.exceptions.JsonParseException;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +48,7 @@ public class DenomTraceClient {
 			return denomTraceObjectMapper.readValue(json, DenomTraceDto.class);
 		} catch (JsonProcessingException e) {
 			log.warn("Cant parse json. ");
-			throw new JsonParceException("Cant parse json", e.getCause());
+			throw new JsonParseException("Cant parse json", e.getCause());
 		}
 	}
 

@@ -2,8 +2,9 @@ package com.mapofzones.tokenmatcher.service;
 
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.domain.Derivative;
-import com.mapofzones.tokenmatcher.domain.Token;
+import com.mapofzones.tokenmatcher.domain.token.Token;
 import com.mapofzones.tokenmatcher.domain.Zone;
+import com.mapofzones.tokenmatcher.domain.token.TokenId;
 import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import com.mapofzones.tokenmatcher.service.token.ITokenService;
 import com.mapofzones.tokenmatcher.service.zone.IZoneService;
@@ -23,18 +24,18 @@ import java.util.regex.Pattern;
 @Service
 public class PathfinderFacade {
 
-    private final ITokenService tokenService;
+    private final ITokenService abstractTokenService;
     private final IZoneService zoneService;
     private final IDerivativeService derivativeService;
     private final IThreadStarter pathfinderThreadStarter;
 
     private BlockingQueue<Derivative> derivativeQueue;
 
-    public PathfinderFacade(ITokenService tokenService,
+    public PathfinderFacade(ITokenService abstractTokenService,
                             IZoneService zoneService,
                             IDerivativeService derivativeService,
                             IThreadStarter pathfinderThreadStarter) {
-        this.tokenService = tokenService;
+        this.abstractTokenService = abstractTokenService;
         this.zoneService = zoneService;
         this.derivativeService = derivativeService;
         this.pathfinderThreadStarter = pathfinderThreadStarter;
@@ -58,17 +59,17 @@ public class PathfinderFacade {
             Iterator<String> channelTrace = getChannelTrace(derivative.getDerivativeId().getFullDenom());
             String originZone = findOriginZone(derivative.getDerivativeId().getZone(), channelTrace);
 
-            token.setTokenId(new Token.TokenId(originZone, baseDenom));
+            token.setTokenId(new TokenId(originZone, baseDenom));
 
             if (originZone.isBlank()) {
                 return;
             }
 
         } else {
-            token.setTokenId(new Token.TokenId(derivative.getDerivativeId().getZone(), baseDenom));
+            token.setTokenId(new TokenId(derivative.getDerivativeId().getZone(), baseDenom));
         }
 
-        tokenService.save(token);
+        abstractTokenService.saveToken(token);
         derivativeService.setTokenIdData(derivative.getDerivativeId(), token.getTokenId());
     }
 

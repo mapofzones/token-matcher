@@ -5,8 +5,9 @@ import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.DenomTrace;
 import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.domain.IbcChannel;
-import com.mapofzones.tokenmatcher.domain.Token;
+import com.mapofzones.tokenmatcher.domain.token.Token;
 import com.mapofzones.tokenmatcher.domain.ZoneNode;
+import com.mapofzones.tokenmatcher.domain.token.TokenId;
 import com.mapofzones.tokenmatcher.service.denomtraces.IDenomTraceService;
 import com.mapofzones.tokenmatcher.service.ibcchannel.IIbcChanelService;
 import com.mapofzones.tokenmatcher.service.zonenode.IZoneNodeService;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -79,7 +79,7 @@ public class DerivativeService implements IDerivativeService {
 	}
 
 	@Override
-	public void setTokenIdData(Derivative.DerivativeId derivativeId, Token.TokenId tokenId) {
+	public void setTokenIdData(Derivative.DerivativeId derivativeId, TokenId tokenId) {
 		Derivative derivative = derivativeRepository.findById(derivativeId)
 				.orElseThrow(() -> new EntityNotFoundException(derivativeId.toString()));
 		derivative.setTokenIdData(tokenId);
@@ -111,6 +111,8 @@ public class DerivativeService implements IDerivativeService {
 
 	private String findAddressByZone(String zone) {
 		List<ZoneNode> aliveZoneNodes = zoneNodeService.getAliveByName(zone);
+		if (aliveZoneNodes == null || aliveZoneNodes.isEmpty())
+			return EMPTY_STRING;
 		ZoneNode zoneNode = aliveZoneNodes.get((int)(Math.random() * aliveZoneNodes.size()));
 		return zoneNode.getLcdAddress() != null ? zoneNode.getLcdAddress() : EMPTY_STRING;
 	}

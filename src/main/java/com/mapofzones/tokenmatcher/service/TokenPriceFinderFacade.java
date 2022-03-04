@@ -1,14 +1,16 @@
 package com.mapofzones.tokenmatcher.service;
 
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
-import com.mapofzones.tokenmatcher.domain.Token;
+import com.mapofzones.tokenmatcher.domain.token.Token;
 import com.mapofzones.tokenmatcher.service.token.ITokenService;
-import com.mapofzones.tokenmatcher.service.tokenprice.ITokenPriceService;
+import com.mapofzones.tokenmatcher.service.tokenprice.DexEnum;
+import com.mapofzones.tokenmatcher.service.tokenprice.services.ITokenPriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -16,59 +18,50 @@ import java.util.concurrent.BlockingQueue;
 @Service
 public class TokenPriceFinderFacade {
 
-    private final ITokenService tokenService;
     private final IThreadStarter tokenPriceFinderThreadStarter;
-    private final ITokenPriceService tokenPriceService;
+    private final Map<DexEnum, ITokenPriceService> mapTokenPriceService;
+    private final Map<DexEnum, ITokenService> mapTokenService;
 
-    private BlockingQueue<Token> coingeckoIds;
-    private BlockingQueue<Token> osmosisIds;
+    private ITokenPriceService tokenPriceService;
 
-    public TokenPriceFinderFacade(ITokenService tokenService,
+    private BlockingQueue<Token> queueIds;
+
+    public TokenPriceFinderFacade(Map<DexEnum, ITokenService> mapTokenService,
                                   IThreadStarter tokenPriceFinderThreadStarter,
-                                  ITokenPriceService tokenPriceService) {
-        this.tokenService = tokenService;
+                                  Map<DexEnum, ITokenPriceService> mapTokenPriceService) {
+        this.mapTokenService = mapTokenService;
         this.tokenPriceFinderThreadStarter = tokenPriceFinderThreadStarter;
-        this.tokenPriceService = tokenPriceService;
+        this.mapTokenPriceService = mapTokenPriceService;
     }
 
     public void findAllTokenPrices() {
-        List<Token> unprocessedCoingeckoIds = tokenService.findAllByCoingeckoIsNotNull();
-        log.info("Tokens size: " + unprocessedCoingeckoIds.size());
-        if (!unprocessedCoingeckoIds.isEmpty()) {
-            coingeckoIds = new ArrayBlockingQueue<>(unprocessedCoingeckoIds.size(), true, unprocessedCoingeckoIds);
-            log.info("Cashflow queue size: " + coingeckoIds.size());
-            tokenPriceFinderThreadStarter.startThreads(findTokenPriceInCoingeckoFunction);
-            tokenPriceFinderThreadStarter.waitMainThread();
-        }
 
-        List<Token> unprocessedOsmosisTokens = tokenService.findAllByOsmosisIsNotNull();
-        log.info("Tokens size: " + unprocessedOsmosisTokens.size());
-        if (!unprocessedOsmosisTokens.isEmpty()) {
-            osmosisIds = new ArrayBlockingQueue<>(unprocessedOsmosisTokens.size(), true, unprocessedOsmosisTokens);
-            log.info("Cashflow queue size: " + osmosisIds.size());
-            tokenPriceFinderThreadStarter.startThreads(findTokenPriceInOsmosisFunction);
-            tokenPriceFinderThreadStarter.waitMainThread();
-        }
+        for (Map.Entry<DexEnum, ITokenPriceService> entry : mapTokenPriceService.entrySet()) {
+            tokenPriceService = entry.getValue();
+            List<Token> unprocessedCoingeckoIds = mapTokenService.get(entry.getKey()).findAllByDexIdIsNotNull();
+            log.info("Tokens size: " + unprocessedCoingeckoIds.size());
 
+            if (!unprocessedCoingeckoIds.isEmpty()) {
+                queueIds = new ArrayBlockingQueue<>(unprocessedCoingeckoIds.size(), true, unprocessedCoingeckoIds);
+                log.info("Price queue size: " + queueIds.size());
+                tokenPriceFinderThreadStarter.startThreads(findTokenPriceInDexFunction);
+                tokenPriceFinderThreadStarter.waitMainThread();
+            }
+        }
     }
 
     @Transactional
-    public void findTokenPriceByCoingeckoId(Token token) {
-        tokenPriceService.findAndSaveTokenPriceByCoingeckoId(token);
+    public void findTokenPriceByDexId(Token token) {
+        tokenPriceService.findAndSaveTokenPrice(token);
     }
 
-    @Transactional
-    public void findTokenPriceByOsmosisId(Token token) {
-        tokenPriceService.findAndSaveTokenPriceByOsmosisId(token);
-    }
-
-    private final Runnable findTokenPriceInCoingeckoFunction = () -> {
+    private final Runnable findTokenPriceInDexFunction = () -> {
         while (true) {
-            if (!coingeckoIds.isEmpty()) {
+            if (!queueIds.isEmpty()) {
                 try {
-                    Token token = coingeckoIds.take();
+                    Token token = queueIds.take();
                     log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone());
-                    findTokenPriceByCoingeckoId(token);
+                    findTokenPriceByDexId(token);
                     log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
                 } catch (InterruptedException e) {
@@ -79,23 +72,4 @@ public class TokenPriceFinderFacade {
             else break;
         }
     };
-
-    private final Runnable findTokenPriceInOsmosisFunction = () -> {
-        while (true) {
-            if (!osmosisIds.isEmpty()) {
-                try {
-                    Token token = osmosisIds.take();
-                    log.info("...Start findTokenPrice in osmosis for zone: " + token.getTokenId().getZone());
-                    findTokenPriceByOsmosisId(token);
-                    log.info("...Finished findTokenPrice in osmosis" + token.getTokenId().getZone());
-                    log.info(Thread.currentThread().getName() + " Start matching " + token);
-                } catch (InterruptedException e) {
-                    log.error("Queue error. " + e.getCause());
-                    e.printStackTrace();
-                }
-            }
-            else break;
-        }
-    };
-
 }

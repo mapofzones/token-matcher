@@ -1,5 +1,7 @@
 package com.mapofzones.tokenmatcher.domain;
 
+import com.mapofzones.tokenmatcher.domain.token.Token;
+import com.mapofzones.tokenmatcher.domain.token.TokenId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,7 +49,7 @@ public class Derivative {
 		this.isSuccessfulBuild = denomTrace.isSuccessfulReceived();
 	}
 
-	public void setTokenIdData(Token.TokenId tokenId) {
+	public void setTokenIdData(TokenId tokenId) {
 		this.setBaseDenom(tokenId.getBaseDenom());
 		this.setOriginZone(tokenId.getZone());
 	}

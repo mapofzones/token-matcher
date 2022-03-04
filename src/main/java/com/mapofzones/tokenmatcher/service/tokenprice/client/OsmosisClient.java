@@ -2,8 +2,10 @@ package com.mapofzones.tokenmatcher.service.tokenprice.client;
 
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.OsmosisTokenPriceDto;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,7 +21,7 @@ import static com.mapofzones.tokenmatcher.common.constants.DateConstants.MILLIS_
 import static com.mapofzones.tokenmatcher.common.constants.DateConstants.START_DATE_IN_MILLIS;
 
 @Slf4j
-public class OsmosisClient {
+public class OsmosisClient implements ITokenPriceClient {
 
     private final RestTemplate tokenPriceRestTemplate;
     private final EndpointProperties endpointProperties;
@@ -31,6 +33,11 @@ public class OsmosisClient {
     }
 
     public OsmosisTokenPriceDto findTokenPrice(String osmosisId, LocalDateTime lastTokenPriceTime) {
+
+        if (osmosisId == null) {
+            log.warn("Osmosis token id is null");
+            return new OsmosisTokenPriceDto(new OsmosisTokenPriceDto.OsmosisTokenPrice[0]);
+        }
 
         long startDate;
         if (lastTokenPriceTime == null)
@@ -50,8 +57,6 @@ public class OsmosisClient {
         }
         return new OsmosisTokenPriceDto(new OsmosisTokenPriceDto.OsmosisTokenPrice[0]);
     }
-
-
 
     private long calculateDaysBetweenStartDateAndNow(Long start) {
         LocalDateTime startDate = LocalDateTime

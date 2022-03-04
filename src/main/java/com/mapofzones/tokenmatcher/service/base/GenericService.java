@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional
-public class GenericService<T, ID, R extends GenericRepository<T, ID>> implements IGenericService<T, ID, R> {
+public class GenericService<T, ID, R extends IGenericRepository<T, ID>> implements IGenericService<T, ID, R> {
 
     protected final R repository;
 

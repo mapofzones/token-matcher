@@ -53,9 +53,9 @@ public class TokenMatcherFacade {
 			Derivative builtDerivative = derivativeService.buildViaCashFlow(cashflow);
 			if (builtDerivative.isSuccessfulBuild()) {
 				derivativeService.save(builtDerivative);
-				log.info("Saved: " + builtDerivative);
+				//log.info("Saved: " + builtDerivative);
 				Cashflow matchedCashflow = cashflowService.matchWithDerivative(cashflow.getCashflowId(), builtDerivative.getDerivativeId());
-				log.info("Matched with derivative denom: " + matchedCashflow.getDerivativeDenom());
+				//log.info("Matched with derivative denom: " + matchedCashflow.getDerivativeDenom());
 			} else if (cashflow.getCashflowId().getDenom().startsWith("ibc/")) {
 				unmatchableIbcHashes.add(cashflow.getCashflowId().getDenom());
 			}
