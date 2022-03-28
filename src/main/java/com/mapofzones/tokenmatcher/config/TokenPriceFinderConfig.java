@@ -7,6 +7,7 @@ import com.mapofzones.tokenmatcher.service.token.ITokenService;
 import com.mapofzones.tokenmatcher.service.tokenprice.DexEnum;
 import com.mapofzones.tokenmatcher.service.tokenprice.services.ITokenPriceService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -29,8 +30,8 @@ public class TokenPriceFinderConfig {
     }
 
     @Bean
-    public Map<DexEnum, ITokenService> mapTokenService(ITokenService coingeckoTokenService,
-                                                       ITokenService osmosisTokenService) {
+    public Map<DexEnum, ITokenService> mapTokenService(@Qualifier("coingeckoTokenService") ITokenService coingeckoTokenService,
+                                                       @Qualifier("osmosisTokenService") ITokenService osmosisTokenService) {
         Map<DexEnum, ITokenService> map = new HashMap<>();
         map.put(DexEnum.COINGECKO, coingeckoTokenService);
         map.put(DexEnum.OSMOSIS, osmosisTokenService);
@@ -38,9 +39,8 @@ public class TokenPriceFinderConfig {
     }
 
     @Bean
-    public Map<DexEnum, ITokenPriceService> mapTokenPriceService(ITokenPriceService coingeckoTokenPriceService,
-                                                                 ITokenPriceService osmosisTokenPriceService) {
-
+    public Map<DexEnum, ITokenPriceService> mapTokenPriceService(@Qualifier("coingeckoTokenPriceService") ITokenPriceService coingeckoTokenPriceService,
+                                                                 @Qualifier("osmosisTokenPriceService") ITokenPriceService osmosisTokenPriceService) {
         Map<DexEnum, ITokenPriceService> map = new HashMap<>();
         map.put(DexEnum.COINGECKO, coingeckoTokenPriceService);
         map.put(DexEnum.OSMOSIS, osmosisTokenPriceService);
