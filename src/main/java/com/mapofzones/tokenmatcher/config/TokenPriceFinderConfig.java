@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +19,13 @@ import java.util.Map;
 public class TokenPriceFinderConfig {
 
     @Bean
-    public TokenPriceFinderProperties tokenFinderProperties() {
+    public TokenPriceFinderProperties tokenPriceFinderProperties() {
         return new TokenPriceFinderProperties();
     }
 
     @Bean
     public IThreadStarter tokenPriceFinderThreadStarter() {
-        return new ThreadStarter(tokenFinderProperties().getThreads(), tokenFinderProperties().getThreadsNaming());
+        return new ThreadStarter(tokenPriceFinderProperties().getThreads(), tokenPriceFinderProperties().getThreadsNaming());
     }
 
     @Bean

@@ -21,7 +21,7 @@ public class TokenPriceFinderScheduler {
         this.tokenPriceFinderThreadStarter = tokenPriceFinderThreadStarter;
     }
 
-    @Scheduled(fixedDelayString = "#{tokenFinderProperties.syncTime}")
+    @Scheduled(fixedDelayString = "#{tokenPriceFinderProperties.syncTime}")
     public void run() {
         if (tokenPriceFinderThreadStarter.isDone()) {
             log.info("TokenFinder is running.");

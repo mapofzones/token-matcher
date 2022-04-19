@@ -11,7 +11,7 @@ pathfinder:
 token-price-finder:
   sync-time: ${TPF_SYNC_TIME}
   threads: ${TPF_THREADS}
-  threads-naming: 'Pool-TokenFinder-Thread-%d'
+  threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 
 spring:
   datasource:

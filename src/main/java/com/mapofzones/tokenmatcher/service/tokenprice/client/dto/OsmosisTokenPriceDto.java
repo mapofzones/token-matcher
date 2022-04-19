@@ -23,6 +23,10 @@ public class OsmosisTokenPriceDto extends AbstractDexTokenPriceDto {
         this.osmosisTokenPriceList = Arrays.asList(Objects.requireNonNull(osmosisTokenPriceArr));
     }
 
+    public OsmosisTokenPriceDto(List<OsmosisTokenPrice> osmosisTokenPriceList) {
+        this.osmosisTokenPriceList = osmosisTokenPriceList;
+    }
+
     @Override
     public TokenPriceDto toTokenPrice() {
         List<TokenPriceDto.PriceInTime> priceInTimeList = new ArrayList<>();
@@ -46,6 +50,8 @@ public class OsmosisTokenPriceDto extends AbstractDexTokenPriceDto {
         private BigDecimal low;
         @JsonProperty("open")
         private BigDecimal open;
+        @JsonProperty("volume")
+        private BigDecimal volume;
     }
 
 }

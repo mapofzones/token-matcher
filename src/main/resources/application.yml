@@ -22,7 +22,7 @@ endpoint:
     token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'
   osmosis:
     base-url: 'https://api-osmosis.imperator.co'
-    token-price-history: '/tokens/v1/historical/%s/chart?range=%s'
+    token-price-history-v2: '/tokens/v2/historical/%s/chart?tf=%d'
 
 spring:
   main:

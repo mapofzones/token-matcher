@@ -32,5 +32,6 @@ public class EndpointProperties {
     public static class Osmosis {
         private String baseUrl;
         private String tokenPriceHistory;
+        private String tokenPriceHistoryV2;
     }
 }
