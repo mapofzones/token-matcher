@@ -60,7 +60,8 @@ public class TokenPriceFinderFacade {
             if (!queueIds.isEmpty()) {
                 try {
                     Token token = queueIds.take();
-                    log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone());
+                    log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone() +
+                            " token: " + token.getTokenId().getBaseDenom());
                     findTokenPriceByDexId(token);
                     log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
