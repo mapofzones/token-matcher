@@ -22,6 +22,6 @@ public class CoingeckoTokenService extends AbstractTokenService implements IToke
 
     @Override
     public List<Token> findAllByDexIdIsNotNull() {
-        return tokenRepository.findAllByCoingeckoIdIsNotNullOrderByDatetimeDesc();
+        return tokenRepository.findAllByCoingeckoIdIsNotNullOrderByPriceLastCheckedAtAsc();
     }
 }

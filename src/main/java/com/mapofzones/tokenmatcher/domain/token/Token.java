@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -20,4 +21,7 @@ public class Token {
 
     @Column(name = "osmosis_id")
     private String osmosisId;
+
+    @Column(name = "price_last_checked_at")
+    private LocalDateTime priceLastCheckedAt;
 }

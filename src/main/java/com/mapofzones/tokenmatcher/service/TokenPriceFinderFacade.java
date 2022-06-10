@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -21,6 +22,7 @@ public class TokenPriceFinderFacade {
     private final IThreadStarter tokenPriceFinderThreadStarter;
     private final Map<DexEnum, ITokenPriceService> mapTokenPriceService;
     private final Map<DexEnum, ITokenService> mapTokenService;
+    private final ITokenService tokenService;
 
     private ITokenPriceService tokenPriceService;
 
@@ -28,10 +30,12 @@ public class TokenPriceFinderFacade {
 
     public TokenPriceFinderFacade(Map<DexEnum, ITokenService> mapTokenService,
                                   IThreadStarter tokenPriceFinderThreadStarter,
-                                  Map<DexEnum, ITokenPriceService> mapTokenPriceService) {
+                                  Map<DexEnum, ITokenPriceService> mapTokenPriceService,
+                                  ITokenService tokenService) {
         this.mapTokenService = mapTokenService;
         this.tokenPriceFinderThreadStarter = tokenPriceFinderThreadStarter;
         this.mapTokenPriceService = mapTokenPriceService;
+        this.tokenService = tokenService;
     }
 
     public void findAllTokenPrices() {
@@ -50,11 +54,6 @@ public class TokenPriceFinderFacade {
         }
     }
 
-    @Transactional
-    public void findTokenPriceByDexId(Token token) {
-        tokenPriceService.findAndSaveTokenPrice(token);
-    }
-
     private final Runnable findTokenPriceInDexFunction = () -> {
         while (true) {
             if (!queueIds.isEmpty()) {
@@ -64,6 +63,7 @@ public class TokenPriceFinderFacade {
                             " token: " + token.getTokenId().getBaseDenom());
                     findTokenPriceByDexId(token);
                     log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
+                    updateTokenPriceLastCheckedAt(token);
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());
@@ -73,4 +73,15 @@ public class TokenPriceFinderFacade {
             else break;
         }
     };
+
+    @Transactional
+    public void findTokenPriceByDexId(Token token) {
+        tokenPriceService.findAndSaveTokenPrice(token);
+    }
+
+    @Transactional
+    public void updateTokenPriceLastCheckedAt(Token token) {
+        token.setPriceLastCheckedAt(LocalDateTime.now());
+        tokenService.save(token);
+    }
 }
