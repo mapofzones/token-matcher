@@ -4,6 +4,6 @@ import com.mapofzones.tokenmatcher.domain.token.Token;
 
 public interface ITokenPriceService {
 
-    void findAndSaveTokenPrice(Token token);
+    Integer findAndSaveTokenPrice(Token token);
 
 }

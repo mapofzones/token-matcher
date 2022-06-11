@@ -28,7 +28,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
     }
 
     @Override
-    public void findAndSaveTokenPrice(Token token) {
+    public Integer findAndSaveTokenPrice(Token token) {
         Boolean isExistsPricesForCurrentToken = repository.existsByDexSymbolPriceInUsdIsNotNullAndTokenPriceId_BaseDenom(token.getTokenId().getBaseDenom(), token.getTokenId().getZone());
         List<E> existsTokenPricesWithPriceIsNull;
 
@@ -76,5 +76,6 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
         log.info("Ready to save all preparedTokenPriceList in CoingeckoSymbolPriceInUsd, size: " + preparedTokenPriceList.size());
         repository.saveAll(preparedTokenPriceList);
         log.info("Saved all preparedTokenPriceList in CoingeckoSymbolPriceInUsd, size: " + preparedTokenPriceList.size());
+        return preparedTokenPriceList.size();
     }
 }

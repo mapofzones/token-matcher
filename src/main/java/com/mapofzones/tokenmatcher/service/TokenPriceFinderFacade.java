@@ -61,10 +61,10 @@ public class TokenPriceFinderFacade {
                     Token token = queueIds.take();
                     log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone() +
                             " token: " + token.getTokenId().getBaseDenom());
-                    findTokenPriceByDexId(token);
+                    Integer foundPrices = findTokenPriceByDexId(token);
                     log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
-                    updateTokenPriceLastCheckedAt(token);
                     log.info(Thread.currentThread().getName() + " Start matching " + token);
+                    updateTokenPriceLastCheckedAt(foundPrices, token);
                 } catch (InterruptedException e) {
                     log.error("Queue error. " + e.getCause());
                     Thread.currentThread().interrupt();
@@ -75,13 +75,16 @@ public class TokenPriceFinderFacade {
     };
 
     @Transactional
-    public void findTokenPriceByDexId(Token token) {
-        tokenPriceService.findAndSaveTokenPrice(token);
+    public Integer findTokenPriceByDexId(Token token) {
+        return tokenPriceService.findAndSaveTokenPrice(token);
     }
 
     @Transactional
-    public void updateTokenPriceLastCheckedAt(Token token) {
-        token.setPriceLastCheckedAt(LocalDateTime.now());
-        tokenService.save(token);
+    public void updateTokenPriceLastCheckedAt(Integer foundPrices, Token token) {
+        if (foundPrices > 0) {
+            token.setPriceLastCheckedAt(LocalDateTime.now());
+            tokenService.save(token);
+        }
+
     }
 }
