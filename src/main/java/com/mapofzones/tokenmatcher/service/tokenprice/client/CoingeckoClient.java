@@ -5,7 +5,6 @@ import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.CoingeckoTokenP
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,6 +51,8 @@ public class CoingeckoClient implements ITokenPriceClient {
                 try {
                     ResponseEntity<CoingeckoTokenPriceDto> response = tokenPriceRestTemplate.getForEntity(uri, CoingeckoTokenPriceDto.class);
                     foundPrices.addPricesRows(Objects.requireNonNull(response.getBody()).getPrices());
+                    foundPrices.addMarketCupsRows(Objects.requireNonNull(response.getBody()).getMarketCups());
+                    foundPrices.addTotalVolumesRows(Objects.requireNonNull(response.getBody()).getTotalVolumes());
                 } catch (RestClientException e) {
                     log.warn("(CoingeckoClient)Request cant be completed. " + uri);
                 }

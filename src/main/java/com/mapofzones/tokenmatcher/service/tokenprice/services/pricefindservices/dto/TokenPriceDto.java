@@ -15,7 +15,14 @@ public class TokenPriceDto {
         this.priceInTimeList = priceInTimeList;
     }
 
+    public TokenPriceDto(List<PriceInTime> priceInTimeList, List<List<String>> extraParameters) {
+        this.priceInTimeList = priceInTimeList;
+        this.extraParameters = extraParameters;
+    }
+
     private List<PriceInTime> priceInTimeList;
+
+    private List<List<String>> extraParameters;
 
     public LocalDateTime getLastPriceTime() {
         return priceInTimeList.isEmpty() ? LocalDateTime.now() : priceInTimeList.get(priceInTimeList.size() - 1).getTime();
@@ -26,14 +33,34 @@ public class TokenPriceDto {
     }
 
     @Data
-    public static class PriceInTime {
+    public static class PriceInTime implements Cloneable {
+
+        // TODO: May be change MarketCup and TotalVolumes to Abstract parameters
+
+        private LocalDateTime time;
+        private BigDecimal price;
+        private BigDecimal marketCup;
+        private BigDecimal totalVolumes;
 
         public PriceInTime(LocalDateTime time, BigDecimal price) {
             this.time = time;
             this.price = price;
         }
 
-        private LocalDateTime time;
-        private BigDecimal price;
+        public PriceInTime(LocalDateTime time, BigDecimal price, BigDecimal marketCup, BigDecimal totalVolumes) {
+            this.time = time;
+            this.price = price;
+            this.marketCup = marketCup;
+            this.totalVolumes = totalVolumes;
+        }
+
+        @Override
+        public PriceInTime clone() {
+            try {
+                return (PriceInTime) super.clone();
+            } catch (CloneNotSupportedException e) {
+                return null;
+            }
+        }
     }
 }

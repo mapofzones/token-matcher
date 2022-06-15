@@ -34,7 +34,7 @@ public class OsmosisTokenPrice extends TokenPrice<OsmosisTokenPrice> {
     }
 
     @Override
-    public void setPriceInUsd(BigDecimal tokenPrice) {
+    public void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCup, BigDecimal totalVolumes) {
         this.setOsmosisSymbolPriceInUsd(tokenPrice);
     }
 

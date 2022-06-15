@@ -30,12 +30,16 @@ public class CoingeckoTokenPrice extends TokenPrice<CoingeckoTokenPrice> {
 
         CoingeckoTokenPrice tokenPrice = new CoingeckoTokenPrice(tokenPriceId);
         tokenPrice.setCoingeckoSymbolPriceInUsd(priceInTime.getPrice());
+        tokenPrice.setCoingeckoSymbolMarketCupInUsd(priceInTime.getMarketCup());
+        tokenPrice.setCoingeckoSymbolTotalVolumesInUsd(priceInTime.getTotalVolumes());
         return tokenPrice;
     }
 
     @Override
-    public void setPriceInUsd(BigDecimal tokenPrice) {
+    public void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCup, BigDecimal totalVolumes) {
         this.setCoingeckoSymbolPriceInUsd(tokenPrice);
+        this.setCoingeckoSymbolMarketCupInUsd(marketCup);
+        this.setCoingeckoSymbolTotalVolumesInUsd(totalVolumes);
     }
 
     @Override

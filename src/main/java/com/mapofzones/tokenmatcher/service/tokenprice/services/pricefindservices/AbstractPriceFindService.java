@@ -44,8 +44,10 @@ public abstract class AbstractPriceFindService {
                 } else if (foundTokenPrices.getPriceInTimeList().get(i).getTime().isEqual(expectedPriceTime)) {
                     expectedPriceTime = expectedPriceTime.plus(1, ChronoUnit.HOURS);
                 } else {
-                    TokenPriceDto.PriceInTime priceInTime =
-                            new TokenPriceDto.PriceInTime(expectedPriceTime, foundTokenPrices.getPriceInTimeList().get(expectedPriceTime.isBefore(lastPriceTime) ? i - 1 : i).getPrice());
+                    TokenPriceDto.PriceInTime priceInTime = expectedPriceTime.isBefore(lastPriceTime) ?
+                            foundTokenPrices.getPriceInTimeList().get(i - 1).clone() :
+                            foundTokenPrices.getPriceInTimeList().get(i).clone();
+                    priceInTime.setTime(expectedPriceTime);
                     additionalTokenPriceDtoSet.add(priceInTime);
                     expectedPriceTime = expectedPriceTime.plus(1, ChronoUnit.HOURS);
                 }

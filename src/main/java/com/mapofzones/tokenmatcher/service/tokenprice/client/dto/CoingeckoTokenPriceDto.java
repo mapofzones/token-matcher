@@ -13,7 +13,6 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({"market_caps", "total_volumes"})
 public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
 
     /*
@@ -24,14 +23,40 @@ public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
     @JsonProperty("prices")
     private List<List<String>> prices = new ArrayList<>();
 
+    @JsonProperty("market_caps")
+    private List<List<String>> marketCups = new ArrayList<>();
+
+    @JsonProperty("total_volumes")
+    private List<List<String>> totalVolumes = new ArrayList<>();
+
     public void addPricesRows(List<List<String>> newPricesRows) {
         prices.addAll(newPricesRows);
     }
 
+    public void addMarketCupsRows(List<List<String>> newMarketCupsRows) {
+        marketCups.addAll(newMarketCupsRows);
+    }
+
+    public void addTotalVolumesRows(List<List<String>> newTotalVolumesRows) {
+        totalVolumes.addAll(newTotalVolumesRows);
+    }
+
     @Override
     public TokenPriceDto toTokenPrice() {
+
+        System.out.println("price: " + prices.size());
+        System.out.println("marketCaps: " + marketCups.size());
+        System.out.println("totalVolumes: " + totalVolumes.size());
+
         List<TokenPriceDto.PriceInTime> priceInTimeList = new ArrayList<>();
-        prices.forEach(price -> priceInTimeList.add(new TokenPriceDto.PriceInTime(TimeHelper.millisToLocalDateTime(price.get(0)), BigDecimal.valueOf(Double.parseDouble(price.get(1))))));
+        for (int i = 0; i < prices.size(); i++) {
+            priceInTimeList.add(new TokenPriceDto.PriceInTime(
+                    TimeHelper.millisToLocalDateTime(prices.get(i).get(0)),
+                    BigDecimal.valueOf(Double.parseDouble(prices.get(i).get(1))),
+                    BigDecimal.valueOf(Double.parseDouble(marketCups.get(i).get(1))),
+                    BigDecimal.valueOf(Double.parseDouble(totalVolumes.get(i).get(1)))
+            ));
+        }
         return new TokenPriceDto(priceInTimeList);
     }
 }
