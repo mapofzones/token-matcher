@@ -15,6 +15,8 @@ public interface TokenRepository extends IGenericRepository<Token, TokenId> {
 
     List<Token> findAllByOsmosisIdIsNotNull();
 
+    List<Token> findAllByTokenId_BaseDenomIsNotNull();
+
     @Modifying
     @Query(value = "INSERT INTO tokens (zone, base_denom) VALUES (?1, ?2) ON CONFLICT DO NOTHING", nativeQuery = true)
     void save(String zone, String baseDenom);

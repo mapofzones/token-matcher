@@ -44,17 +44,13 @@ public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
     @Override
     public TokenPriceDto toTokenPrice() {
 
-        System.out.println("price: " + prices.size());
-        System.out.println("marketCaps: " + marketCups.size());
-        System.out.println("totalVolumes: " + totalVolumes.size());
-
         List<TokenPriceDto.PriceInTime> priceInTimeList = new ArrayList<>();
         for (int i = 0; i < prices.size(); i++) {
             priceInTimeList.add(new TokenPriceDto.PriceInTime(
                     TimeHelper.millisToLocalDateTime(prices.get(i).get(0)),
-                    BigDecimal.valueOf(Double.parseDouble(prices.get(i).get(1))),
-                    BigDecimal.valueOf(Double.parseDouble(marketCups.get(i).get(1))),
-                    BigDecimal.valueOf(Double.parseDouble(totalVolumes.get(i).get(1)))
+                    new BigDecimal(prices.get(i).get(1)),
+                    new BigDecimal(marketCups.get(i).get(1)),
+                    new BigDecimal(totalVolumes.get(i).get(1))
             ));
         }
         return new TokenPriceDto(priceInTimeList);

@@ -9,9 +9,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "endpoint")
 public class EndpointProperties {
 
+    private CosmosSDK cosmosSDK;
     private IBC ibc;
     private Coingecko coingecko;
     private Osmosis osmosis;
+
+    @Getter
+    @Setter
+    public static class CosmosSDK {
+        private String supply;
+    }
 
     @Getter
     @Setter

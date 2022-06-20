@@ -30,19 +30,23 @@ public class TokenPriceFinderConfig {
 
     @Bean
     public Map<DexEnum, ITokenService> mapTokenService(@Qualifier("coingeckoTokenService") ITokenService coingeckoTokenService,
-                                                       @Qualifier("osmosisTokenService") ITokenService osmosisTokenService) {
+                                                       @Qualifier("osmosisTokenService") ITokenService osmosisTokenService,
+                                                       @Qualifier("supplyTokenService") ITokenService baseTokenService) {
         Map<DexEnum, ITokenService> map = new HashMap<>();
         map.put(DexEnum.COINGECKO, coingeckoTokenService);
         map.put(DexEnum.OSMOSIS, osmosisTokenService);
+        map.put(DexEnum.SUPPLY, baseTokenService);
         return map;
     }
 
     @Bean
     public Map<DexEnum, ITokenPriceService> mapTokenPriceService(@Qualifier("coingeckoTokenPriceService") ITokenPriceService coingeckoTokenPriceService,
-                                                                 @Qualifier("osmosisTokenPriceService") ITokenPriceService osmosisTokenPriceService) {
+                                                                 @Qualifier("osmosisTokenPriceService") ITokenPriceService osmosisTokenPriceService,
+                                                                 @Qualifier("tokenSupplyService") ITokenPriceService tokenSupplyService) {
         Map<DexEnum, ITokenPriceService> map = new HashMap<>();
         map.put(DexEnum.COINGECKO, coingeckoTokenPriceService);
         map.put(DexEnum.OSMOSIS, osmosisTokenPriceService);
+        map.put(DexEnum.SUPPLY, tokenSupplyService);
         return map;
     }
 }

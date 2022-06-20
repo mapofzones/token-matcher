@@ -29,7 +29,7 @@ public abstract class AbstractPriceFindService {
         return foundTokenPrices;
     }
 
-    private void completeTokenPrices(TokenPriceDto foundTokenPrices) {
+    protected void completeTokenPrices(TokenPriceDto foundTokenPrices) {
 
         List<TokenPriceDto.PriceInTime> additionalTokenPriceDtoSet = new ArrayList<>();
         LocalDateTime expectedPriceTime = foundTokenPrices.getFirstPriceTime();

@@ -10,6 +10,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Data
 @NoArgsConstructor
@@ -30,6 +31,9 @@ public abstract class TokenPrice<E extends TokenPrice<E>> {
 
     @Column(name = "COINGECKO_SYMBOL_TOTAL_VOLUMES_IN_USD")
     private BigDecimal coingeckoSymbolTotalVolumesInUsd;
+
+    @Column(name = "SYMBOL_SUPPLY")
+    private BigDecimal symbolSupply;
 
     @Transient
     private E concreteTokenPrice;

@@ -9,7 +9,7 @@ pathfinder:
   threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
-  sync-time: 60s
+  sync-time: 10s
   threads: 1
   threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 

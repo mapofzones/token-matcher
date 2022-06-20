@@ -3,7 +3,8 @@ package com.mapofzones.tokenmatcher.service.tokenprice;
 public enum DexEnum {
 
     COINGECKO("Coingecko"),
-    OSMOSIS("Osmosis");
+    OSMOSIS("Osmosis"),
+    SUPPLY("Supply");
 
     private final String name;
 

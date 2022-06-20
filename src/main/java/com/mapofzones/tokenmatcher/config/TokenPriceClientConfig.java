@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.CoingeckoClient;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.OsmosisClient;
+import com.mapofzones.tokenmatcher.service.tokenprice.client.TokenSupplyClient;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,7 @@ public class TokenPriceClientConfig {
         return restTemplateBuilder
                 .additionalMessageConverters(new StringHttpMessageConverter(StandardCharsets.UTF_8))
                 .setConnectTimeout(Duration.ofSeconds(5))
-                .setReadTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(10))
                 .build();
     }
 
@@ -43,6 +44,12 @@ public class TokenPriceClientConfig {
     public OsmosisClient osmosisClient(RestTemplate tokenPriceRestTemplate,
                                        EndpointProperties endpointProperties) {
         return new OsmosisClient(tokenPriceRestTemplate, endpointProperties);
+    }
+
+    @Bean
+    public TokenSupplyClient supplyClient(RestTemplate tokenPriceRestTemplate,
+                                          EndpointProperties endpointProperties) {
+        return new TokenSupplyClient(tokenPriceRestTemplate, endpointProperties);
     }
 
 }
