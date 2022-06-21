@@ -20,8 +20,11 @@ endpoint:
     denom-trace-beta: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
     denom-trace: '/ibc/apps/transfer/v1/denom_traces/%s'
   coingecko:
+    pro-api-key: ${PRO_API_KEY:null}
     base-url: 'https://api.coingecko.com/api/v3'
     token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d'
+    pro-base-url: 'https://pro-api.coingecko.com/api/v3'
+    pro-token-price-history: '/coins/%s/market_chart/range?vs_currency=usd&from=%d&to=%d&x_cg_pro_api_key='
   osmosis:
     base-url: 'https://api-osmosis.imperator.co'
     token-price-history-v2: '/tokens/v2/historical/%s/chart?tf=%d'

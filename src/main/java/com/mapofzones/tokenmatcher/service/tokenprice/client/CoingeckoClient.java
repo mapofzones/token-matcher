@@ -94,9 +94,15 @@ public class CoingeckoClient implements ITokenPriceClient {
             if (day > untilDay - MILLIS_IN_DAY)
                 day = untilDay - MILLIS_IN_DAY;
 
-            URI uri = URI.create(String.format(
-                    endpointProperties.getCoingecko().getBaseUrl() + endpointProperties.getCoingecko().getTokenPriceHistory(),
-                    coingeckoId, day / 1000 + 1, untilDay / 1000));
+
+            String uriString;
+            if (endpointProperties.getCoingecko().getProApiKey().equals("null")) {
+                uriString = endpointProperties.getCoingecko().getBaseUrl() + endpointProperties.getCoingecko().getTokenPriceHistory();
+            } else {
+                uriString = endpointProperties.getCoingecko().getProBaseUrl() + endpointProperties.getCoingecko().getProTokenPriceHistory() + endpointProperties.getCoingecko().getProApiKey();
+            }
+
+            URI uri = URI.create(String.format(uriString, coingeckoId, day / 1000 + 1, untilDay / 1000));
 
             uriList.add(uri);
         }

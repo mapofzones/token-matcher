@@ -30,8 +30,11 @@ public class EndpointProperties {
     @Getter
     @Setter
     public static class Coingecko {
+        private String proApiKey;
         private String baseUrl;
         private String tokenPriceHistory;
+        private String proBaseUrl;
+        private String proTokenPriceHistory;
     }
 
     @Getter
