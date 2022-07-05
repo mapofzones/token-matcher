@@ -1,17 +1,14 @@
 token-matcher:
   sync-time: ${TM_SYNC_TIME}
   threads: ${TM_THREADS}
-  threads-naming: 'Pool-TokenMatcher-Thread-%d'
 
 pathfinder:
   sync-time: ${PF_SYNC_TIME}
   threads: ${PF_THREADS}
-  threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
   sync-time: ${TPF_SYNC_TIME}
   threads: ${TPF_THREADS}
-  threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 
 spring:
   datasource:

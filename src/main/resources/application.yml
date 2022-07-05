@@ -1,17 +1,14 @@
 token-matcher:
   sync-time: 120s
   threads: 8
-  threads-naming: 'Pool-TokenMatcher-Thread-%d'
 
 pathfinder:
   sync-time: 120s
   threads: 1
-  threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
   sync-time: 2000s
   threads: 1
-  threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 
 endpoint:
   cosmos-sdk:

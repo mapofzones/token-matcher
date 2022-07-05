@@ -1,17 +1,14 @@
 token-matcher:
   sync-time: 120s
   threads: 2
-  threads-naming: 'Pool-TokenMatcher-Thread-%d'
 
 pathfinder:
   sync-time: 60s
   threads: 1
-  threads-naming: 'Pool-Pathfinder-Thread-%d'
 
 token-price-finder:
   sync-time: 10s
   threads: 1
-  threads-naming: 'Pool-TokenPriceFinder-Thread-%d'
 
 spring:
   datasource:

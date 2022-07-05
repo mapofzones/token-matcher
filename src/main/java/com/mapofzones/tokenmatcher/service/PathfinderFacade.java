@@ -9,6 +9,8 @@ import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import com.mapofzones.tokenmatcher.service.token.ITokenService;
 import com.mapofzones.tokenmatcher.service.zone.IZoneService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,13 +36,14 @@ public class PathfinderFacade {
     public PathfinderFacade(ITokenService abstractTokenService,
                             IZoneService zoneService,
                             IDerivativeService derivativeService,
-                            IThreadStarter pathfinderThreadStarter) {
+                            @Qualifier("pathfinderThreadStarter") IThreadStarter pathfinderThreadStarter) {
         this.abstractTokenService = abstractTokenService;
         this.zoneService = zoneService;
         this.derivativeService = derivativeService;
         this.pathfinderThreadStarter = pathfinderThreadStarter;
     }
 
+    @Async
     public void findAll() {
         List<Derivative> incompleteDerivativeList = derivativeService.findIncomplete();
         if (!incompleteDerivativeList.isEmpty()) {
@@ -73,20 +76,16 @@ public class PathfinderFacade {
         derivativeService.setTokenIdData(derivative.getDerivativeId(), token.getTokenId());
     }
 
-    private final Runnable pathfinderFunction = () -> {
-        while (true) {
-            if (!derivativeQueue.isEmpty()) {
-                try {
-                    Derivative currentDerivative = derivativeQueue.take();
-                    find(currentDerivative);
-                } catch (InterruptedException e) {
-                    log.error("Queue error. " + e.getCause());
-                    Thread.currentThread().interrupt();
-                }
-            }
-            else break;
+    private final Runnable pathfinderFunction = () -> derivativeQueue.stream().parallel().forEach(node -> {
+        try {
+            Derivative currentDerivative = derivativeQueue.take();
+            find(currentDerivative);
+        } catch (InterruptedException e) {
+            log.error("Queue error. " + e.getCause());
+            Thread.currentThread().interrupt();
         }
-    };
+    });
+
 
     private String findOriginZone(String zone, Iterator<String> channelIterator) {
         if (channelIterator.hasNext()) {

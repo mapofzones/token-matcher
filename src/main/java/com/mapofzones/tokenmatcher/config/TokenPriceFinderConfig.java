@@ -8,8 +8,10 @@ import com.mapofzones.tokenmatcher.service.tokenprice.DexEnum;
 import com.mapofzones.tokenmatcher.service.tokenprice.services.ITokenPriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +26,9 @@ public class TokenPriceFinderConfig {
     }
 
     @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public IThreadStarter tokenPriceFinderThreadStarter() {
-        return new ThreadStarter(tokenPriceFinderProperties().getThreads(), tokenPriceFinderProperties().getThreadsNaming());
+        return new ThreadStarter(tokenPriceFinderProperties().getThreads());
     }
 
     @Bean

@@ -6,6 +6,8 @@ import com.mapofzones.tokenmatcher.domain.Derivative;
 import com.mapofzones.tokenmatcher.service.cashflow.ICashflowService;
 import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,18 +32,18 @@ public class TokenMatcherFacade {
 
 	public TokenMatcherFacade(IDerivativeService derivativeService,
 							  ICashflowService cashflowService,
-							  IThreadStarter tokenMatcherThreadStarter) {
+							  @Qualifier("tokenMatcherThreadStarter") IThreadStarter tokenMatcherThreadStarter) {
 		this.derivativeService = derivativeService;
 		this.cashflowService = cashflowService;
 		this.tokenMatcherThreadStarter = tokenMatcherThreadStarter;
 	}
 
+	@Async
 	public void matchAll() {
 		List<Cashflow> unmatchedCashflowList = cashflowService.findUnmatchedCashflow();
 		if (!unmatchedCashflowList.isEmpty()) {
 			cashflowQueue = new ArrayBlockingQueue<>(unmatchedCashflowList.size(), true, unmatchedCashflowList);
 			tokenMatcherThreadStarter.startThreads(tokenMatcherFunction);
-			tokenMatcherThreadStarter.waitMainThread();
 			unmatchableIbcHashes.clear();
 		}
 	}
@@ -62,19 +64,14 @@ public class TokenMatcherFacade {
 		}
 	}
 
-	private final Runnable tokenMatcherFunction = () -> {
-		while (true) {
-			if (!cashflowQueue.isEmpty()) {
-				try {
-					Cashflow currentCashflow = cashflowQueue.take();
-					match(currentCashflow);
-					//log.info(Thread.currentThread().getName() + " Start matching " + currentCashflow);
-				} catch (InterruptedException e) {
-					log.error("Queue error. " + e.getCause());
-					Thread.currentThread().interrupt();
-				}
-			}
-			else break;
+	private final Runnable tokenMatcherFunction = () -> cashflowQueue.stream().parallel().forEach(node -> {
+		try {
+			Cashflow currentCashflow = cashflowQueue.take();
+			match(currentCashflow);
+			//log.info(Thread.currentThread().getName() + " Start matching " + currentCashflow);
+		} catch (InterruptedException e) {
+			log.error("Queue error. " + e.getCause());
+			Thread.currentThread().interrupt();
 		}
-	};
+	});
 }
