@@ -65,7 +65,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
                         preparedTokenPriceList.add(tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token));
                         break;
                     } else if (currentConcreteTime.isEqual(tokenPrice.getTokenPriceId().getDatetime())) {
-                        tokenPrice.setPriceInUsd(priceInTime.getPrice(), priceInTime.getMarketCup(), priceInTime.getTotalVolumes());
+                        tokenPrice.setPriceInUsd(priceInTime.getPrice(), priceInTime.getMarketCap(), priceInTime.getTotalVolumes());
                         preparedTokenPriceList.add(tokenPrice);
                         break;
                     }

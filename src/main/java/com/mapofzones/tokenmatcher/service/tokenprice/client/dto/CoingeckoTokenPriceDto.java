@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.service.tokenprice.client.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mapofzones.tokenmatcher.service.tokenprice.services.pricefindservices.dto.TokenPriceDto;
 import com.mapofzones.tokenmatcher.utils.TimeHelper;
@@ -24,7 +23,7 @@ public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
     private List<List<String>> prices = new ArrayList<>();
 
     @JsonProperty("market_caps")
-    private List<List<String>> marketCups = new ArrayList<>();
+    private List<List<String>> marketCaps = new ArrayList<>();
 
     @JsonProperty("total_volumes")
     private List<List<String>> totalVolumes = new ArrayList<>();
@@ -33,8 +32,8 @@ public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
         prices.addAll(newPricesRows);
     }
 
-    public void addMarketCupsRows(List<List<String>> newMarketCupsRows) {
-        marketCups.addAll(newMarketCupsRows);
+    public void addMarketCapsRows(List<List<String>> newMarketCapsRows) {
+        marketCaps.addAll(newMarketCapsRows);
     }
 
     public void addTotalVolumesRows(List<List<String>> newTotalVolumesRows) {
@@ -49,7 +48,7 @@ public class CoingeckoTokenPriceDto extends AbstractDexTokenPriceDto {
             priceInTimeList.add(new TokenPriceDto.PriceInTime(
                     TimeHelper.millisToLocalDateTime(prices.get(i).get(0)),
                     new BigDecimal(prices.get(i).get(1)),
-                    new BigDecimal(marketCups.get(i).get(1)),
+                    new BigDecimal(marketCaps.get(i).get(1)),
                     new BigDecimal(totalVolumes.get(i).get(1))
             ));
         }

@@ -51,7 +51,7 @@ public class CoingeckoClient implements ITokenPriceClient {
                 try {
                     ResponseEntity<CoingeckoTokenPriceDto> response = tokenPriceRestTemplate.getForEntity(uri, CoingeckoTokenPriceDto.class);
                     foundPrices.addPricesRows(Objects.requireNonNull(response.getBody()).getPrices());
-                    foundPrices.addMarketCupsRows(Objects.requireNonNull(response.getBody()).getMarketCups());
+                    foundPrices.addMarketCapsRows(Objects.requireNonNull(response.getBody()).getMarketCaps());
                     foundPrices.addTotalVolumesRows(Objects.requireNonNull(response.getBody()).getTotalVolumes());
                 } catch (RestClientException e) {
                     log.warn("(CoingeckoClient)Request cant be completed. " + uri);

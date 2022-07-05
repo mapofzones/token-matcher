@@ -7,6 +7,7 @@ import com.mapofzones.tokenmatcher.common.properties.EndpointProperties;
 import com.mapofzones.tokenmatcher.service.tokenprice.client.dto.SupplyTokenDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -32,8 +33,8 @@ public class TokenSupplyClient implements ITokenPriceClient {
             ResponseEntity<String> response = tokenPriceRestTemplate.getForEntity(uri, String.class);
             JsonNode node = new ObjectMapper().readValue(response.getBody(), JsonNode.class);
             return new SupplyTokenDto(node.get("amount").get("amount").asText());
-        } catch (JsonProcessingException e) {
-            log.warn("Json can't parce: " + uri);
+        } catch (JsonProcessingException | RestClientException e) {
+            //log.warn("Json can't parce: " + uri);
             return new SupplyTokenDto(null);
         }
     }

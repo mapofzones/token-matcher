@@ -26,8 +26,8 @@ public abstract class TokenPrice<E extends TokenPrice<E>> {
     @Column(name = "OSMOSIS_SYMBOL_PRICE_IN_USD")
     private BigDecimal osmosisSymbolPriceInUsd;
 
-    @Column(name = "COINGECKO_SYMBOL_MARKET_CUP_IN_USD")
-    private BigDecimal coingeckoSymbolMarketCupInUsd;
+    @Column(name = "COINGECKO_SYMBOL_MARKET_CAP_IN_USD")
+    private BigDecimal coingeckoSymbolMarketCapInUsd;
 
     @Column(name = "COINGECKO_SYMBOL_TOTAL_VOLUMES_IN_USD")
     private BigDecimal coingeckoSymbolTotalVolumesInUsd;
@@ -49,7 +49,7 @@ public abstract class TokenPrice<E extends TokenPrice<E>> {
 
     public abstract E tokenPriceFromPriceInTime(TokenPriceDto.PriceInTime priceInTime, Token token);
 
-    public abstract void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCup, BigDecimal totalVolumes);
+    public abstract void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCap, BigDecimal totalVolumes);
 
     public abstract String getDexTokenId(Token token);
 

@@ -34,7 +34,7 @@ public class TokenSupply extends TokenPrice<TokenSupply> {
     }
 
     @Override
-    public void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCup, BigDecimal totalVolumes) {
+    public void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCap, BigDecimal totalVolumes) {
         this.setSymbolSupply(tokenPrice);
     }
 

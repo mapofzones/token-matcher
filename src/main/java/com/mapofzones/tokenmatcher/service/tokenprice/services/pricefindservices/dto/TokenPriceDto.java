@@ -35,11 +35,11 @@ public class TokenPriceDto {
     @Data
     public static class PriceInTime implements Cloneable {
 
-        // TODO: May be change MarketCup and TotalVolumes to Abstract parameters
+        // TODO: May be change MarketCap and TotalVolumes to Abstract parameters
 
         private LocalDateTime time;
         private BigDecimal price;
-        private BigDecimal marketCup;
+        private BigDecimal marketCap;
         private BigDecimal totalVolumes;
 
         public PriceInTime(LocalDateTime time, BigDecimal price) {
@@ -47,10 +47,10 @@ public class TokenPriceDto {
             this.price = price;
         }
 
-        public PriceInTime(LocalDateTime time, BigDecimal price, BigDecimal marketCup, BigDecimal totalVolumes) {
+        public PriceInTime(LocalDateTime time, BigDecimal price, BigDecimal marketCap, BigDecimal totalVolumes) {
             this.time = time;
             this.price = price;
-            this.marketCup = marketCup;
+            this.marketCap = marketCap;
             this.totalVolumes = totalVolumes;
         }
 
