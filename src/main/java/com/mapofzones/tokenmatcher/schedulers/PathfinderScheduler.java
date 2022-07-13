@@ -23,9 +23,7 @@ public class PathfinderScheduler {
 
     @Scheduled(fixedDelayString = "#{pathfinderProperties.syncTime}")
     public void run() {
-        if (pathfinderThreadStarter.isDone()) {
-            log.info("Pathfinder is running.");
-            pathfinderFacade.findAll();
-        }
+        log.info("Pathfinder is running.");
+        pathfinderFacade.findAll();
     }
 }

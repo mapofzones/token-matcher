@@ -7,7 +7,6 @@ import com.mapofzones.tokenmatcher.service.cashflow.ICashflowService;
 import com.mapofzones.tokenmatcher.service.derivative.IDerivativeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,6 @@ public class TokenMatcherFacade {
 		this.tokenMatcherThreadStarter = tokenMatcherThreadStarter;
 	}
 
-	@Async
 	public void matchAll() {
 		List<Cashflow> unmatchedCashflowList = cashflowService.findUnmatchedCashflow();
 		if (!unmatchedCashflowList.isEmpty()) {

@@ -23,9 +23,7 @@ public class TokenMatcherScheduler {
 
     @Scheduled(fixedDelayString = "#{tokenMatcherProperties.syncTime}")
     public void run() {
-        if (tokenMatcherThreadStarter.isDone()) {
-            log.info("TokenMatcher is running.");
-            tokenMatcherFacade.matchAll();
-        }
+        log.info("TokenMatcher is running.");
+        tokenMatcherFacade.matchAll();
     }
 }

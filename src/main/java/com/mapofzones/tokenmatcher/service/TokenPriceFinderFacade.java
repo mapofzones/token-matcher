@@ -1,14 +1,12 @@
 package com.mapofzones.tokenmatcher.service;
 
 import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
-import com.mapofzones.tokenmatcher.domain.Cashflow;
 import com.mapofzones.tokenmatcher.domain.token.Token;
 import com.mapofzones.tokenmatcher.service.token.ITokenService;
 import com.mapofzones.tokenmatcher.service.tokenprice.DexEnum;
 import com.mapofzones.tokenmatcher.service.tokenprice.services.ITokenPriceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +39,6 @@ public class TokenPriceFinderFacade {
         this.tokenService = tokenService;
     }
 
-    @Async
     public void findAllTokenPrices() {
 
         for (Map.Entry<DexEnum, ITokenPriceService> entry : mapTokenPriceService.entrySet()) {

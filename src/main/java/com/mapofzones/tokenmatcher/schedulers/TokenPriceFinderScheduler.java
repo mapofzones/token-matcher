@@ -23,10 +23,7 @@ public class TokenPriceFinderScheduler {
 
     @Scheduled(fixedDelayString = "#{tokenPriceFinderProperties.syncTime}")
     public void run() {
-        if (tokenPriceFinderThreadStarter.isDone()) {
-            log.info("TokenFinder is running.");
-            tokenPriceFinderFacade.findAllTokenPrices();
-        }
+        log.info("TokenFinder is running.");
+        tokenPriceFinderFacade.findAllTokenPrices();
     }
-
 }

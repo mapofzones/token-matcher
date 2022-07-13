@@ -23,10 +23,4 @@ public class ThreadStarter implements IThreadStarter {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean isDone() {
-        return pool.getRunningThreadCount() == 0;
-    }
-
 }

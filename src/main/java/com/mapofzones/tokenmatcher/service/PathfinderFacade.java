@@ -43,7 +43,6 @@ public class PathfinderFacade {
         this.pathfinderThreadStarter = pathfinderThreadStarter;
     }
 
-    @Async
     public void findAll() {
         List<Derivative> incompleteDerivativeList = derivativeService.findIncomplete();
         if (!incompleteDerivativeList.isEmpty()) {
