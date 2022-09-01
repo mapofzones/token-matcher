@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.schedulers;
 
-import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.service.PathfinderFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -13,17 +12,19 @@ import org.springframework.stereotype.Component;
 public class PathfinderScheduler {
 
     private final PathfinderFacade pathfinderFacade;
-    private final IThreadStarter pathfinderThreadStarter;
 
-    public PathfinderScheduler(PathfinderFacade pathfinderFacade,
-                               IThreadStarter pathfinderThreadStarter) {
+    public PathfinderScheduler(PathfinderFacade pathfinderFacade) {
         this.pathfinderFacade = pathfinderFacade;
-        this.pathfinderThreadStarter = pathfinderThreadStarter;
     }
 
-    @Scheduled(fixedDelayString = "#{pathfinderProperties.syncTime}")
+    private int iteration = 1;
+
+    @Scheduled(fixedDelayString = "#{pathfinderProperties.syncTime}", initialDelayString = "2000")
     public void run() {
-        log.info("Pathfinder is running.");
+        log.info("[{}] Pathfinder is running", iteration);
         pathfinderFacade.findAll();
+        log.info("[{}] Pathfinder is finishing", iteration);
+        log.info("-----------------------------------");
+        iteration++;
     }
 }

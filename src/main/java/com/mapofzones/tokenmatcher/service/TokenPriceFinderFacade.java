@@ -44,11 +44,11 @@ public class TokenPriceFinderFacade {
         for (Map.Entry<DexEnum, ITokenPriceService> entry : mapTokenPriceService.entrySet()) {
             tokenPriceService = entry.getValue();
             List<Token> unprocessedCoingeckoIds = mapTokenService.get(entry.getKey()).findAllByDexIdIsNotNull();
-            log.info("Tokens size: " + unprocessedCoingeckoIds.size());
+            log.debug("Unprocessed tokens size: {} - {}", entry.getKey(), unprocessedCoingeckoIds.size());
 
             if (!unprocessedCoingeckoIds.isEmpty()) {
                 queueIds = new ArrayBlockingQueue<>(unprocessedCoingeckoIds.size(), true, unprocessedCoingeckoIds);
-                log.info("Price queue size: " + queueIds.size());
+                log.debug("Price queue size: " + queueIds.size());
                 tokenPriceFinderThreadStarter.startThreads(findTokenPriceInDexFunction);
             }
         }
@@ -57,11 +57,11 @@ public class TokenPriceFinderFacade {
     private final Runnable findTokenPriceInDexFunction = () -> queueIds.stream().parallel().forEach(node -> {
         try {
             Token token = queueIds.take();
-            log.info("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone() +
+            log.debug("...Start findTokenPrice in coingecko for zone: " + token.getTokenId().getZone() +
                     " token: " + token.getTokenId().getBaseDenom());
             Integer foundPrices = findTokenPriceByDexId(token);
-            log.info("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
-            log.info(Thread.currentThread().getName() + " Start matching " + token);
+            log.debug("...Finished findTokenPrice in coingecko" + token.getTokenId().getZone());
+            log.debug(Thread.currentThread().getName() + " Start matching " + token);
             updateTokenPriceLastCheckedAt(foundPrices, token);
         } catch (InterruptedException e) {
             log.error("Queue error. " + e.getCause());

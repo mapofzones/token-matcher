@@ -79,4 +79,31 @@ public class AbstractPriceFindServiceTest {
                 Assertions.assertEquals(expectedPrice, actualPrice);
         }
     }
+
+    @Test
+    void completeTokenPricesTest_OnePriceInFiveDay() {
+
+        String privateMethodName = "completeTokenPrices";
+
+        int testEntries = 2;
+        long startPrice = 100;
+        LocalDateTime startTime = TimeHelper.nowAroundDays();
+
+        AbstractPriceFindService osmosisPriceFindService = new OsmosisPriceFindService(osmosisClient);
+        List<TokenPriceDto.PriceInTime> priceInTimeList = new ArrayList<>();
+
+        for (int i = 0; i <= testEntries; i++)
+            priceInTimeList.add(new TokenPriceDto.PriceInTime(startTime.minus(testEntries - (5L * i), ChronoUnit.DAYS), BigDecimal.valueOf(startPrice + i)));
+
+        TokenPriceDto tokenPriceDto = new TokenPriceDto(priceInTimeList);
+
+        ReflectionTestUtils.invokeMethod(osmosisPriceFindService, privateMethodName, tokenPriceDto);
+
+        for (int i = 0; i < tokenPriceDto.getPriceInTimeList().size(); i++) {
+            TokenPriceDto.PriceInTime expectedPrice =
+                    new TokenPriceDto.PriceInTime(startTime.minus(testEntries, ChronoUnit.DAYS).plus(i, ChronoUnit.HOURS), BigDecimal.valueOf((i / 120) + startPrice));
+            TokenPriceDto.PriceInTime actualPrice = tokenPriceDto.getPriceInTimeList().get(i);
+            Assertions.assertEquals(expectedPrice, actualPrice);
+        }
+    }
 }

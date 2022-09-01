@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.schedulers;
 
-import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.service.TokenMatcherFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -13,17 +12,19 @@ import org.springframework.stereotype.Component;
 public class TokenMatcherScheduler {
 
     private final TokenMatcherFacade tokenMatcherFacade;
-    private final IThreadStarter tokenMatcherThreadStarter;
 
-    public TokenMatcherScheduler(TokenMatcherFacade tokenMatcherFacade,
-                                 IThreadStarter tokenMatcherThreadStarter) {
+    public TokenMatcherScheduler(TokenMatcherFacade tokenMatcherFacade) {
         this.tokenMatcherFacade = tokenMatcherFacade;
-        this.tokenMatcherThreadStarter = tokenMatcherThreadStarter;
     }
 
-    @Scheduled(fixedDelayString = "#{tokenMatcherProperties.syncTime}")
+    private int iteration = 1;
+
+    @Scheduled(fixedDelayString = "#{tokenMatcherProperties.syncTime}", initialDelayString = "4000")
     public void run() {
-        log.info("TokenMatcher is running.");
+        log.info("[{}] TokenMatcher is running", iteration);
         tokenMatcherFacade.matchAll();
+        log.info("[{}] TokenMatcher is finishing", iteration);
+        log.info("-----------------------------------");
+        iteration++;
     }
 }

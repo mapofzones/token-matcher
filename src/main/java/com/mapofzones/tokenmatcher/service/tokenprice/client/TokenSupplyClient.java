@@ -29,12 +29,12 @@ public class TokenSupplyClient implements ITokenPriceClient {
 
         URI uri = URI.create(String.format(urlWithBaseToken, endpointProperties.getCosmosSDK().getSupply()));
         try {
-            log.info("Find supply: " + uri);
+            log.debug("Find supply: " + uri);
             ResponseEntity<String> response = tokenPriceRestTemplate.getForEntity(uri, String.class);
             JsonNode node = new ObjectMapper().readValue(response.getBody(), JsonNode.class);
             return new SupplyTokenDto(node.get("amount").get("amount").asText());
         } catch (JsonProcessingException | RestClientException e) {
-            //log.warn("Json can't parce: " + uri);
+            log.debug("Json can't parce: " + uri);
             return new SupplyTokenDto(null);
         }
     }

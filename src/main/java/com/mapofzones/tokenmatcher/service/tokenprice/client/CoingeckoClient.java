@@ -39,26 +39,25 @@ public class CoingeckoClient implements ITokenPriceClient {
         CoingeckoTokenPriceDto foundPrices = new CoingeckoTokenPriceDto();
 
         if (coingeckoId == null) {
-            log.warn("Coingecko token id is null");
             return foundPrices;
         }
 
         List<URI> uriList = prepareURLForFindPartsOfRange(coingeckoId, lastTokenPriceTime);
-        log.info("coingecko URIs size: " + uriList.size());
+        log.debug("coingecko URIs size: " + uriList.size());
         if (!uriList.isEmpty()) {
             for (URI uri : uriList) {
-                log.info("coingecko URI: " + uri.toString());
+                log.debug("coingecko URI: " + uri.toString());
                 try {
                     ResponseEntity<CoingeckoTokenPriceDto> response = tokenPriceRestTemplate.getForEntity(uri, CoingeckoTokenPriceDto.class);
                     foundPrices.addPricesRows(Objects.requireNonNull(response.getBody()).getPrices());
                     foundPrices.addMarketCapsRows(Objects.requireNonNull(response.getBody()).getMarketCaps());
                     foundPrices.addTotalVolumesRows(Objects.requireNonNull(response.getBody()).getTotalVolumes());
                 } catch (RestClientException e) {
-                    log.warn("(CoingeckoClient)Request cant be completed. " + uri);
+                    log.debug("(CoingeckoClient)Request cant be completed. " + uri);
                 }
             }
         }
-        log.info("DTOs size: " + foundPrices.getPrices().size());
+        log.debug("DTOs size: " + foundPrices.getPrices().size());
         return foundPrices;
     }
 

@@ -34,7 +34,8 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
 
         if (isExistsPricesForCurrentToken) {
             existsTokenPricesWithPriceIsNull = repository.findAllAfterFirstByBaseDenomAndZoneAndDexPriceIsNull(token.getTokenId().getBaseDenom(), token.getTokenId().getZone());
-        } else existsTokenPricesWithPriceIsNull = repository.findAllByBaseDenomAndZoneAndDexPriceIsNull(token.getTokenId().getBaseDenom(), token.getTokenId().getZone());
+        } else
+            existsTokenPricesWithPriceIsNull = repository.findAllByBaseDenomAndZoneAndDexPriceIsNull(token.getTokenId().getBaseDenom(), token.getTokenId().getZone());
 
         List<E> preparedTokenPriceList = new ArrayList<>();
 
@@ -61,7 +62,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
             for (TokenPriceDto.PriceInTime priceInTime : tokenPriceDto.getPriceInTimeList()) {
                 LocalDateTime currentConcreteTime = priceInTime.getTime();
                 for (E tokenPrice : existsTokenPricesWithPriceIsNull) {
-                    if (currentConcreteTime.isBefore(tokenPrice.getTokenPriceId().getDatetime()) && !isExistsPricesForCurrentToken) {
+                    if (currentConcreteTime.isBefore(tokenPrice.getTokenPriceId().getDatetime())) {
                         preparedTokenPriceList.add(tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token));
                         break;
                     } else if (currentConcreteTime.isEqual(tokenPrice.getTokenPriceId().getDatetime())) {
@@ -73,9 +74,9 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
             }
         }
 
-        log.info("Ready to save all preparedTokenPriceList in CoingeckoSymbolPriceInUsd, size: " + preparedTokenPriceList.size());
+        log.debug("Ready to save all preparedTokenPriceList in {}: size: {}, token: {}",  priceFindService.getClass().getSimpleName(), preparedTokenPriceList.size(), token.getTokenId().getBaseDenom());
         repository.saveAll(preparedTokenPriceList);
-        log.info("Saved all preparedTokenPriceList in CoingeckoSymbolPriceInUsd, size: " + preparedTokenPriceList.size());
+        log.debug("Saved all preparedTokenPriceList in {}: size: {}, token: {}", priceFindService.getClass().getSimpleName(), preparedTokenPriceList.size(), token.getTokenId().getBaseDenom());
         return preparedTokenPriceList.size();
     }
 }

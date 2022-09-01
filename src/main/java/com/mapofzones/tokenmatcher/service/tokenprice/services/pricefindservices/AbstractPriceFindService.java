@@ -53,7 +53,9 @@ public abstract class AbstractPriceFindService {
                 }
             }
             expectedPriceTime = expectedPriceTime.plus(1, ChronoUnit.HOURS);
-            if (!additionalTokenPriceDtoSet.isEmpty() && additionalTokenPriceDtoSet.size() < 48) {
+
+            // && additionalTokenPriceDtoSet.size() < 48 - if should be limit
+            if (!additionalTokenPriceDtoSet.isEmpty()) {
                 additionalTokenPriceDtoSet.forEach(value -> foundTokenPrices.getPriceInTimeList().add(value));
                 additionalTokenPriceDtoSet.clear();
             }

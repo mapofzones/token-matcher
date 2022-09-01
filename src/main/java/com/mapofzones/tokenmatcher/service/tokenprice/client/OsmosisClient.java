@@ -31,7 +31,7 @@ public class OsmosisClient implements ITokenPriceClient {
 
     public OsmosisTokenPriceDto findTokenPrice(String osmosisId, LocalDateTime lastTokenPriceTime) {
         if (osmosisId == null) {
-            log.warn("Osmosis token id is null");
+            log.debug("Osmosis token id is null");
             return new OsmosisTokenPriceDto(new OsmosisTokenPriceDto.OsmosisTokenPrice[0]);
         }
 
@@ -50,10 +50,10 @@ public class OsmosisClient implements ITokenPriceClient {
     private OsmosisTokenPriceDto.OsmosisTokenPrice[] doRequest(URI uri) {
         try {
             ResponseEntity<OsmosisTokenPriceDto.OsmosisTokenPrice[]> response = tokenPriceRestTemplate.getForEntity(uri, OsmosisTokenPriceDto.OsmosisTokenPrice[].class);
-            log.info("Success! Osmosis URI: " + uri);
+            log.debug("Success! Osmosis URI: " + uri);
             return response.getBody();
         } catch (RestClientException | NullPointerException e) {
-            log.warn("(OsmosisClient)Request cant be completed. " + uri);
+            log.debug("(OsmosisClient)Request cant be completed. " + uri);
             return new OsmosisTokenPriceDto.OsmosisTokenPrice[0];
         }
     }

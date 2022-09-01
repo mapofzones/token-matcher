@@ -1,6 +1,5 @@
 package com.mapofzones.tokenmatcher.schedulers;
 
-import com.mapofzones.tokenmatcher.common.threads.IThreadStarter;
 import com.mapofzones.tokenmatcher.service.TokenPriceFinderFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -13,17 +12,19 @@ import org.springframework.stereotype.Component;
 public class TokenPriceFinderScheduler {
 
     private final TokenPriceFinderFacade tokenPriceFinderFacade;
-    private final IThreadStarter tokenPriceFinderThreadStarter;
 
-    public TokenPriceFinderScheduler(TokenPriceFinderFacade tokenPriceFinderFacade,
-                                     IThreadStarter tokenPriceFinderThreadStarter) {
+    public TokenPriceFinderScheduler(TokenPriceFinderFacade tokenPriceFinderFacade) {
         this.tokenPriceFinderFacade = tokenPriceFinderFacade;
-        this.tokenPriceFinderThreadStarter = tokenPriceFinderThreadStarter;
     }
 
-    @Scheduled(fixedDelayString = "#{tokenPriceFinderProperties.syncTime}")
+    private int iteration = 1;
+
+    @Scheduled(fixedDelayString = "#{tokenPriceFinderProperties.syncTime}", initialDelayString = "6000")
     public void run() {
-        log.info("TokenFinder is running.");
+        log.info("[{}] TokenPriceFinder is running", iteration);
         tokenPriceFinderFacade.findAllTokenPrices();
+        log.info("[{}] TokenPriceFinder is finishing", iteration);
+        log.info("-----------------------------------");
+        iteration++;
     }
 }
