@@ -29,6 +29,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
 
     @Override
     public Integer findAndSaveTokenPrice(Token token) {
+
         Boolean isExistsPricesForCurrentToken = repository.existsByDexSymbolPriceInUsdIsNotNullAndTokenPriceId_BaseDenom(token.getTokenId().getBaseDenom(), token.getTokenId().getZone());
         List<E> existsTokenPricesWithPriceIsNull;
 
@@ -46,8 +47,10 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
 
             if (!lastTokenPriceTime.isEqual(tokenPriceDto.getLastPriceTime())) {
                 for (TokenPriceDto.PriceInTime priceInTime : tokenPriceDto.getPriceInTimeList()) {
-                    E tokenPrice = tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token);
-                    preparedTokenPriceList.add(tokenPrice);
+                    if (priceInTime.getTime().isAfter(lastTokenPriceTime) || priceInTime.getTime().isEqual(lastTokenPriceTime)) {
+                        E tokenPrice = tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token);
+                        preparedTokenPriceList.add(tokenPrice);
+                    }
                 }
             }
         } else {
@@ -62,7 +65,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
             for (TokenPriceDto.PriceInTime priceInTime : tokenPriceDto.getPriceInTimeList()) {
                 LocalDateTime currentConcreteTime = priceInTime.getTime();
                 for (E tokenPrice : existsTokenPricesWithPriceIsNull) {
-                    if (currentConcreteTime.isBefore(tokenPrice.getTokenPriceId().getDatetime())) {
+                    if (currentConcreteTime.isBefore(tokenPrice.getTokenPriceId().getDatetime()) && !isExistsPricesForCurrentToken) {
                         preparedTokenPriceList.add(tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token));
                         break;
                     } else if (currentConcreteTime.isEqual(tokenPrice.getTokenPriceId().getDatetime())) {
