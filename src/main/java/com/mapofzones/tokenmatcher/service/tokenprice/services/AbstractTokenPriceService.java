@@ -47,7 +47,7 @@ public abstract class AbstractTokenPriceService<S extends AbstractPriceFindServi
 
             if (!lastTokenPriceTime.isEqual(tokenPriceDto.getLastPriceTime())) {
                 for (TokenPriceDto.PriceInTime priceInTime : tokenPriceDto.getPriceInTimeList()) {
-                    if (priceInTime.getTime().isAfter(lastTokenPriceTime) || priceInTime.getTime().isEqual(lastTokenPriceTime)) {
+                    if (priceInTime.getTime().isAfter(lastTokenPriceTime)) {
                         E tokenPrice = tokenPriceHelper.tokenPriceFromPriceInTime(priceInTime, token);
                         preparedTokenPriceList.add(tokenPrice);
                     }
