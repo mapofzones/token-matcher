@@ -13,6 +13,7 @@ token-price-finder:
 endpoint:
   cosmos-sdk:
     supply: '/cosmos/bank/v1beta1/supply'
+    supply-paginated: '/cosmos/bank/v1beta1/supply?pagination.limit=1000000'
   ibc:
     denom-trace-beta: '/ibc/applications/transfer/v1beta1/denom_traces/%s'
     denom-trace: '/ibc/apps/transfer/v1/denom_traces/%s'

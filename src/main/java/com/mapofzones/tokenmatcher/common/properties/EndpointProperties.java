@@ -18,6 +18,7 @@ public class EndpointProperties {
     @Setter
     public static class CosmosSDK {
         private String supply;
+        private String supplyPaginated;
     }
 
     @Getter
