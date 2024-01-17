@@ -32,6 +32,9 @@ public abstract class TokenPrice<E extends TokenPrice<E>> {
     @Column(name = "COINGECKO_SYMBOL_TOTAL_VOLUMES_IN_USD")
     private BigDecimal coingeckoSymbolTotalVolumesInUsd;
 
+    @Column(name = "OSMOSIS_SYMBOL_TOTAL_VOLUMES_IN_USD")
+    private BigDecimal osmosisSymbolTotalVolumesInUsd;
+
     @Column(name = "SYMBOL_SUPPLY")
     private BigDecimal symbolSupply;
 

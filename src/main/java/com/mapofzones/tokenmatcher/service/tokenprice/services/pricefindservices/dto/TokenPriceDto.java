@@ -47,6 +47,12 @@ public class TokenPriceDto {
             this.price = price;
         }
 
+        public PriceInTime(LocalDateTime time, BigDecimal price, BigDecimal totalVolumes) {
+            this.time = time;
+            this.price = price;
+            this.totalVolumes = totalVolumes;
+        }
+
         public PriceInTime(LocalDateTime time, BigDecimal price, BigDecimal marketCap, BigDecimal totalVolumes) {
             this.time = time;
             this.price = price;

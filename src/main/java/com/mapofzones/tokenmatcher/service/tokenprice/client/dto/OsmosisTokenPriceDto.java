@@ -30,12 +30,23 @@ public class OsmosisTokenPriceDto extends AbstractDexTokenPriceDto {
     @Override
     public TokenPriceDto toTokenPrice() {
         List<TokenPriceDto.PriceInTime> priceInTimeList = new ArrayList<>();
-        osmosisTokenPriceList.forEach(osmosisTokenPrice -> priceInTimeList.add(new TokenPriceDto.PriceInTime(TimeHelper.millisToLocalDateTime(osmosisTokenPrice.getTime() * 1000), setOsmosisSymbolPriceInUsdFromDto(osmosisTokenPrice))));
+        osmosisTokenPriceList.forEach(osmosisTokenPrice -> priceInTimeList.add(
+                new TokenPriceDto.PriceInTime(
+                    TimeHelper.millisToLocalDateTime(osmosisTokenPrice.getTime() * 1000), 
+                    setOsmosisSymbolPriceInUsdFromDto(osmosisTokenPrice),
+                    setOsmosisSymbolTotalVolumesInUsd(osmosisTokenPrice)
+                )
+            )
+        );
         return new TokenPriceDto(priceInTimeList);
     }
 
     private BigDecimal setOsmosisSymbolPriceInUsdFromDto(OsmosisTokenPrice osmosisTokenPrice) {
         return osmosisTokenPrice.getClose().add(osmosisTokenPrice.getOpen()).add(osmosisTokenPrice.getHigh()).add(osmosisTokenPrice.getLow()).divide(BigDecimal.valueOf(4), RoundingMode.DOWN);
+    }
+
+    private BigDecimal setOsmosisSymbolTotalVolumesInUsd(OsmosisTokenPrice osmosisTokenPrice) {
+        return osmosisTokenPrice.getVolume();
     }
 
     @Data

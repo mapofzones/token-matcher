@@ -30,12 +30,14 @@ public class OsmosisTokenPrice extends TokenPrice<OsmosisTokenPrice> {
 
         OsmosisTokenPrice tokenPrice = new OsmosisTokenPrice(tokenPriceId);
         tokenPrice.setOsmosisSymbolPriceInUsd(priceInTime.getPrice());
+        tokenPrice.setOsmosisSymbolTotalVolumesInUsd(priceInTime.getTotalVolumes());
         return tokenPrice;
     }
 
     @Override
     public void setPriceInUsd(BigDecimal tokenPrice, BigDecimal marketCap, BigDecimal totalVolumes) {
         this.setOsmosisSymbolPriceInUsd(tokenPrice);
+        this.setOsmosisSymbolTotalVolumesInUsd(totalVolumes);
     }
 
     @Override
